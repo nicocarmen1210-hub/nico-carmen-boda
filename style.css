@@ -97,7 +97,6 @@ main {
 
 /* Decoración superior */
 
-.hero:before,
 .section:before {
   content: "❧";
 
@@ -197,16 +196,6 @@ h3 {
 /* =====================================================
    ELEMENTOS DECORATIVOS
 ===================================================== */
-
-.swans {
-  font-size: 4rem;
-
-  letter-spacing: -.6rem;
-
-  transform: scaleX(1.2);
-
-  margin: 2rem 0;
-}
 
 .scroll-cue {
   color: var(--dark);
@@ -1323,4 +1312,124 @@ fieldset label {
 .historia-card-info h3 * {
   font-family: "Bocklin", Georgia, serif !important;
   font-weight: 400;
+}
+
+/* =================================
+   ENTRADA DE LOS CISNES
+   ================================= */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero > :not(.hero-title-layout) {
+  animation: hero-text-enter 1.2s ease-out both;
+}
+
+.hero-title-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  animation: hero-text-enter 1.2s ease-out both;
+  animation-delay: 0.15s;
+}
+
+.hero > .eyebrow {
+  animation-delay: 0.75s;
+}
+
+.hero-title-layout h1 {
+  grid-column: 2;
+  width: max-content;
+  max-width: 100%;
+  margin: .2rem 0 1.4rem;
+  font-size: clamp(2.2rem, 10vw, 7rem);
+}
+
+.hero > .venue {
+  animation-delay: 0.35s;
+}
+
+.hero > .scroll-cue {
+  animation-delay: 0.95s;
+}
+
+@keyframes hero-text-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swan {
+  width: min(100%, 180px);
+  height: auto;
+  opacity: 0;
+
+  animation-duration: 5s;
+  animation-timing-function: cubic-bezier(.22, .75, .25, 1);
+  animation-fill-mode: forwards;
+}
+
+/* Cisne que entra desde la izquierda */
+.swan-left {
+  grid-column: 1;
+  justify-self: end;
+  animation-name: swan-enter-left;
+}
+
+/* Cisne que entra desde la derecha */
+.swan-right {
+  grid-column: 3;
+  justify-self: start;
+  animation-name: swan-enter-right;
+}
+
+@keyframes swan-enter-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes swan-enter-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-title-layout h1 {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+  }
+
+  .swan {
+    width: 100%;
+  }
 }

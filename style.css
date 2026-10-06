@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: "Bocklin";
-  src: url("fonts/Bocklin-2E0e.ttf") format("truetype");
+  src: url("./fonts/Bocklin-2E0e.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

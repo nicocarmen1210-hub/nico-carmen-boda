@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carmen & Nico · 27.08.27</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<button class="menu-trigger" aria-label="Abrir menú">⋮</button>
+<nav class="menu">
+  <a href="#inicio">Inicio</a>
+  <a href="#historia">Nuestra historia</a>
+  <a href="#lugar">El lugar</a>
+  <a href="#dia">El día</a>
+  <a href="#rsvp">Confirmar</a>
+  <a href="#info">Información</a>
+</nav>
+
+<main>
+<section id="inicio" class="hero">
+  <p class="eyebrow">27 · 08 · 27</p>
+  <h1>Carmen <span>&amp;</span> Nico</h1>
+  <p class="venue">Finca Prados Moros · Guadarrama</p>
+  <div class="swans">♧ ♧</div>
+  <a class="scroll-cue" href="#historia">↓</a>
+</section>
+
+<section id="historia" class="section">
+  <p class="eyebrow">Nuestra historia</p>
+  <h2>Desde pequeños</h2>
+  <p class="intro">Dos caminos que empezaron mucho antes de saber que algún día se encontrarían.</p>
+  <div class="childhood-collage">
+    <figure class="photo">
+      <img src="images/carmen-y-nico-pequenos.jpg" alt="Carmen y Nico de pequeños">
+      <figcaption>Érase una vez...</figcaption>
+    </figure>
+  </div>
+  <p class="story-copy">Entre risas, viajes, planes y muchas aventuras, hemos llegado hasta aquí. Y ahora queremos celebrar este nuevo capítulo contigo.</p>
+</section>
+
+<section id="lugar" class="section">
+  <p class="eyebrow">El lugar</p>
+  <h2>Finca Prados Moros</h2>
+  <p class="place">Guadarrama</p>
+  <p class="intro">Un entorno natural y especial donde celebraremos este día tan importante.</p>
+  <a class="button" href="https://www.google.com/maps/search/?api=1&query=Finca%20Prados%20Moros%20Guadarrama" target="_blank" rel="noopener">Cómo llegar</a>
+</section>
+
+<section id="dia" class="section">
+  <p class="eyebrow">El día</p>
+  <h2>Nos vemos allí</h2>
+  <div class="timeline">
+    <div><time>12:00</time><span>Ceremonia</span></div>
+    <div><time>13:30</time><span>Aperitivo</span></div>
+    <div><time>15:00</time><span>Comida</span></div>
+    <div><time>18:00</time><span>Fiesta</span></div>
+    <div><time>21:00</time><span>... hasta que el cuerpo aguante</span></div>
+  </div>
+</section>
+
+<section id="rsvp" class="section">
+  <p class="eyebrow">Confirmar asistencia</p>
+  <h2>¿Nos acompañas?</h2>
+  <div id="rsvp-search">
+    <label for="guest-search">Busca tu nombre</label>
+    <input id="guest-search" type="text" autocomplete="name" placeholder="Nombre y apellido">
+    <div id="guest-results"></div>
+  </div>
+
+  <form id="rsvp-form" hidden>
+    <input type="hidden" id="guest-id">
+    <h3 id="guest-greeting"></h3>
+    <fieldset>
+      <legend>¿Vienes a la boda?</legend>
+      <label><input type="radio" name="attendance" value="yes" required> Sí, allí estaré</label>
+      <label><input type="radio" name="attendance" value="no"> No podré acompañaros</label>
+    </fieldset>
+    <label for="companion">Acompañante</label>
+    <input id="companion" type="text" placeholder="Nombre del acompañante">
+    <label for="allergies">Alergias / intolerancias</label>
+    <input id="allergies" type="text">
+    <label for="message">¿Algo que quieras contarnos?</label>
+    <textarea id="message" rows="4"></textarea>
+    <button class="button" type="submit">Confirmar asistencia ♡</button>
+    <p id="form-message"></p>
+  </form>
+</section>
+
+<section id="info" class="section">
+  <p class="eyebrow">Información útil</p>
+  <h2>Para que todo sea más fácil</h2>
+  <div class="info-list">
+    <article><h3>Cómo llegar</h3><p>Indicaciones y mapa.</p></article>
+    <article><h3>Dónde dormir</h3><p>Hoteles y alojamientos cercanos.</p></article>
+    <article><h3>Dress code</h3><p>Elegante, cómodo y acorde al entorno.</p></article>
+    <article><h3>Después de la fiesta</h3><p>Transporte y opciones para volver.</p></article>
+    <article><h3>Regalos</h3><p>Si quieres darnos un detalle, aquí te contaremos cómo.</p></article>
+  </div>
+</section>
+
+<section class="closing">
+  <h2>Carmen &amp; Nico</h2>
+  <p>27 · 08 · 27</p>
+  <p>Nos vemos en Prados Moros.</p>
+  <div class="swans">♧ ♧</div>
+</section>
+</main>
+
+<script>
+const API_URL = "PEGA_AQUI_LA_URL_DE_GOOGLE_APPS_SCRIPT";
+
+const menuTrigger = document.querySelector(".menu-trigger");
+const menu = document.querySelector(".menu");
+menuTrigger.addEventListener("click", () => menu.classList.toggle("is-open"));
+menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => menu.classList.remove("is-open")));
+
+const search = document.querySelector("#guest-search");
+const results = document.querySelector("#guest-results");
+const form = document.querySelector("#rsvp-form");
+let timer;
+
+search.addEventListener("input", () => {
+  clearTimeout(timer);
+  const q = search.value.trim();
+  if (q.length < 3) { results.innerHTML = ""; return; }
+  timer = setTimeout(() => findGuests(q), 350);
+});
+
+async function findGuests(q) {
+  if (API_URL.startsWith("PEGA_")) {
+    results.innerHTML = "<p>Conecta primero Google Apps Script.</p>";
+    return;
+  }
+  results.innerHTML = "<p>Buscando...</p>";
+  try {
+    const r = await fetch(`${API_URL}?action=search&q=${encodeURIComponent(q)}`);
+    const data = await r.json();
+    if (!data.guests.length) {
+      results.innerHTML = "<p>No hemos encontrado ese nombre.</p>";
+      return;
+    }
+    results.innerHTML = data.guests.map(g =>
+      `<button type="button" class="guest-option" data-id="${escapeHtml(g.id)}" data-name="${escapeHtml(g.name)}">${escapeHtml(g.name)}</button>`
+    ).join("");
+    results.querySelectorAll(".guest-option").forEach(b =>
+      b.addEventListener("click", () => selectGuest(b.dataset.id, b.dataset.name))
+    );
+  } catch {
+    results.innerHTML = "<p>No hemos podido conectar. Inténtalo de nuevo.</p>";
+  }
+}
+
+function selectGuest(id, name) {
+  document.querySelector("#guest-id").value = id;
+  document.querySelector("#guest-greeting").textContent = `¡Hola, ${name.split(" ")[0]}!`;
+  form.hidden = false;
+  results.innerHTML = "";
+  form.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const attendance = document.querySelector('input[name="attendance"]:checked')?.value;
+  const payload = {
+    action:"rsvp",
+    guestId:document.querySelector("#guest-id").value,
+    attendance,
+    companion:document.querySelector("#companion").value,
+    allergies:document.querySelector("#allergies").value,
+    message:document.querySelector("#message").value
+  };
+  const msg = document.querySelector("#form-message");
+  msg.textContent = "Guardando...";
+  try {
+    const r = await fetch(API_URL, {method:"POST", body:JSON.stringify(payload)});
+    const data = await r.json();
+    msg.textContent = data.ok ? "¡Gracias! Hemos guardado vuestra respuesta ♡" : "No hemos podido guardar la respuesta.";
+    if (data.ok) form.reset();
+  } catch {
+    msg.textContent = "No hemos podido guardar la respuesta. Inténtalo de nuevo.";
+  }
+});
+
+function escapeHtml(v) {
+  return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+</script>
+</body>
+</html>

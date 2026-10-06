@@ -116,19 +116,10 @@ main {
    TIPOGRAFÍA
 ===================================================== */
 
-h1,
-h2,
-h3 {
-  font-family:
-    "Bocklin",
-    Georgia,
-    serif;
-
-  font-weight: normal;
-
-  line-height: 1.05;
-
-  color: var(--dark);
+h1, h2, h3 {
+  font-family: "Bocklin", Georgia, serif !important;
+  font-weight: 400;
+  line-height: .95;
 }
 
 
@@ -983,4 +974,353 @@ fieldset label {
     width: 88vw;
   }
 
+}
+
+
+/* Historia: carousel styles moved here from index.html */
+/* =====================================================
+   CARRUSEL — NUESTRA HISTORIA
+   Todo el estilo está aquí para no tener que modificar
+   style.css
+===================================================== */
+
+.historia-carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 45px;
+}
+
+
+/* Ventana del carrusel */
+
+.historia-carousel-window {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+
+/* Fila horizontal */
+
+.historia-carousel-track {
+  display: flex;
+  flex-direction: row;
+  gap: 35px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+
+  padding: 15px 50px 35px;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+
+  cursor: grab;
+}
+
+.historia-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.historia-carousel-track:active {
+  cursor: grabbing;
+}
+
+
+/* Cada tarjeta */
+
+.historia-card {
+  flex: 0 0 300px;
+  width: 300px;
+
+  scroll-snap-align: center;
+
+  text-align: center;
+}
+
+
+/* Marco de la foto */
+
+.historia-card-photo {
+  width: 270px;
+  height: 270px;
+
+  margin: 0 auto;
+
+  padding: 10px;
+
+  background: #f7f2e8;
+
+  border: 1px solid rgba(48, 70, 52, 0.28);
+
+  box-shadow:
+    0 8px 22px rgba(40, 55, 40, 0.13);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.historia-card:hover .historia-card-photo {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 14px 28px rgba(40, 55, 40, 0.18);
+}
+
+
+/* Imagen */
+
+.historia-card-photo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+/* Texto */
+
+.historia-card-info {
+  margin-top: 20px;
+
+  padding: 0 8px;
+}
+
+
+.historia-card-year {
+  display: block;
+
+  font-family: "Libre Baskerville", serif;
+
+  font-size: 0.7rem;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  color: #71806b;
+
+  margin-bottom: 7px;
+}
+
+
+.historia-card-info h3 {
+  margin: 0 0 8px;
+
+  font-family: "Bocklin", Georgia, serif;
+
+  font-size: 1.65rem;
+
+  font-weight: 500;
+
+  color: #304634;
+}
+
+
+.historia-card-info p {
+  margin: 0;
+
+  font-size: 0.88rem;
+
+  line-height: 1.65;
+
+  color: #60685d;
+}
+
+
+/* =====================================================
+   FLECHAS
+===================================================== */
+
+.historia-arrow {
+  position: absolute;
+
+  top: 135px;
+
+  z-index: 10;
+
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(48, 70, 52, 0.3);
+
+  background: #f5f0e5;
+
+  color: #304634;
+
+  font-size: 1.25rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(40, 55, 40, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.historia-arrow:hover {
+  transform: scale(1.08);
+
+  background: #ebe5d7;
+}
+
+
+.historia-arrow-left {
+  left: 5px;
+}
+
+
+.historia-arrow-right {
+  right: 5px;
+}
+
+
+/* =====================================================
+   INDICADORES
+===================================================== */
+
+.historia-dots {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 5px;
+}
+
+
+.historia-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #c7cec1;
+
+  transition:
+    width 0.25s ease,
+    background 0.25s ease;
+}
+
+
+.historia-dot.active {
+  width: 22px;
+
+  border-radius: 10px;
+
+  background: #5d7059;
+}
+
+
+/* Texto de ayuda */
+
+.historia-swipe {
+  margin-top: 15px;
+
+  text-align: center;
+
+  font-family: "Libre Baskerville", serif;
+
+  font-size: 0.65rem;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  color: #7a8576;
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .historia-carousel {
+    margin-top: 35px;
+  }
+
+  .historia-carousel-track {
+    gap: 20px;
+
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .historia-card {
+    flex: 0 0 245px;
+    width: 245px;
+  }
+
+  .historia-card-photo {
+    width: 215px;
+    height: 215px;
+
+    padding: 8px;
+  }
+
+  .historia-card-info h3 {
+    font-size: 1.45rem;
+  }
+
+  .historia-card-info p {
+    font-size: 0.82rem;
+  }
+
+  .historia-arrow {
+    width: 36px;
+    height: 36px;
+
+    top: 108px;
+
+    font-size: 1rem;
+  }
+
+  .historia-arrow-left {
+    left: 2px;
+  }
+
+  .historia-arrow-right {
+    right: 2px;
+  }
+
+  .historia-swipe {
+    font-size: 0.58rem;
+  }
+
+}
+
+
+/* Final typography override */
+.historia-card-info h3,
+.historia-card-info h3 * {
+  font-family: "Bocklin", Georgia, serif !important;
+  font-weight: 400;
 }

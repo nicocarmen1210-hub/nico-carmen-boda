@@ -198,11 +198,22 @@ h3 {
 ===================================================== */
 
 .scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--dark);
-
-  font-size: 2rem;
-
   text-decoration: none;
+}
+
+.scroll-cue svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  transition: transform .2s ease;
+}
+
+.scroll-cue:hover svg {
+  transform: translateY(4px);
 }
 
 
@@ -776,17 +787,26 @@ fieldset label {
 
   right: 18px;
 
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+
   border: 0;
 
   background: transparent;
 
   color: var(--dark);
 
-  font-size: 2rem;
-
-  line-height: 1;
-
   cursor: pointer;
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .menu {
@@ -1330,8 +1350,9 @@ fieldset label {
 .hero-title-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  width: 100%;
+  align-items: end;
+  width: calc(100% + 14vw + 40px);
+  max-width: 1100px;
   animation: hero-text-enter 1.2s ease-out both;
   animation-delay: 0.15s;
 }
@@ -1369,8 +1390,16 @@ fieldset label {
 }
 
 .swan {
-  width: min(100%, 180px);
-  height: auto;
+  display: block;
+  width: min(100%, 220px);
+  aspect-ratio: 565 / 781;
+  background-color: var(--dark);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   opacity: 0;
 
   animation-duration: 5s;
@@ -1382,6 +1411,8 @@ fieldset label {
 .swan-left {
   grid-column: 1;
   justify-self: end;
+  -webkit-mask-image: url("./images/cisne-izquierdo.png");
+  mask-image: url("./images/cisne-izquierdo.png");
   animation-name: swan-enter-left;
 }
 
@@ -1389,13 +1420,15 @@ fieldset label {
 .swan-right {
   grid-column: 3;
   justify-self: start;
+  -webkit-mask-image: url("./images/cisne-derecho.png");
+  mask-image: url("./images/cisne-derecho.png");
   animation-name: swan-enter-right;
 }
 
 @keyframes swan-enter-left {
   0% {
     opacity: 0;
-    transform: translateX(-100%);
+    transform: translateY(33%) translateX(-100%);
   }
 
   15% {
@@ -1404,14 +1437,14 @@ fieldset label {
 
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(33%) translateX(0);
   }
 }
 
 @keyframes swan-enter-right {
   0% {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateY(33%) translateX(100%);
   }
 
   15% {
@@ -1420,11 +1453,15 @@ fieldset label {
 
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(33%) translateX(0);
   }
 }
 
 @media (max-width: 700px) {
+  .hero-title-layout {
+    width: calc(100% + 40px);
+  }
+
   .hero-title-layout h1 {
     font-size: clamp(2rem, 10vw, 2.8rem);
   }

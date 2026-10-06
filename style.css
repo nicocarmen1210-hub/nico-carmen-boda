@@ -145,7 +145,7 @@ h1 span {
 /* Títulos de secciones */
 
 h2 {
-  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
 
   margin: .3rem 0 1rem;
 }
@@ -634,6 +634,22 @@ h3 {
   font-weight: normal;
 }
 
+.place-map {
+  width: min(80%, 480px);
+  aspect-ratio: 16 / 9;
+  margin: 2rem auto;
+  overflow: hidden;
+  border: 1px solid rgba(89, 104, 70, .3);
+  box-shadow: 0 8px 22px rgba(40, 55, 40, .13);
+}
+
+.place-map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 
 /* =====================================================
    FORMULARIO
@@ -975,7 +991,7 @@ fieldset label {
 
 
   h2 {
-    font-size: clamp(2.5rem, 11vw, 4rem);
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
   }
 
 

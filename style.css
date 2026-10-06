@@ -1162,14 +1162,15 @@ fieldset label {
 
   z-index: 10;
 
-  width: 44px;
+  width: 32px;
   height: 44px;
-
-  border-radius: 50%;
-
-  border: 1px solid rgba(48, 70, 52, 0.3);
-
-  background: #f5f0e5;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
 
   color: #304634;
 
@@ -1181,29 +1182,30 @@ fieldset label {
 
   cursor: pointer;
 
-  box-shadow:
-    0 4px 12px rgba(40, 55, 40, 0.12);
-
   transition:
-    transform 0.2s ease,
-    background 0.2s ease;
+    transform 0.2s ease;
 }
 
-
 .historia-arrow:hover {
-  transform: scale(1.08);
+  transform: scale(1.12);
+  background: transparent;
+  box-shadow: none;
+}
 
-  background: #ebe5d7;
+.historia-arrow svg {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 
 .historia-arrow-left {
-  left: 5px;
+  left: -40px;
 }
 
 
 .historia-arrow-right {
-  right: 5px;
+  right: -40px;
 }
 
 
@@ -1304,20 +1306,19 @@ fieldset label {
   }
 
   .historia-arrow {
-    width: 36px;
-    height: 36px;
-
     top: 108px;
 
     font-size: 1rem;
   }
 
+
   .historia-arrow-left {
-    left: 2px;
+    left: -40px;
   }
 
+
   .historia-arrow-right {
-    right: 2px;
+    right: -40px;
   }
 
   .historia-swipe {
@@ -1469,4 +1470,9 @@ fieldset label {
   .swan {
     width: 100%;
   }
+}
+
+.photo img,
+.historia-card-photo img {
+  filter: grayscale(100%);
 }

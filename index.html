@@ -89,7 +89,9 @@
       class="historia-arrow historia-arrow-left"
       type="button"
       aria-label="Historia anterior">
-      ←
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <path d="m15 4-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
 
 
@@ -285,7 +287,9 @@
       class="historia-arrow historia-arrow-right"
       type="button"
       aria-label="Historia siguiente">
-      →
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <path d="m9 4 8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
 
   </div>
@@ -645,6 +649,32 @@ const historiaTrack =
 const historiaCards =
   document.querySelectorAll(".historia-card");
 
+const historiaCardCount =
+  historiaCards.length;
+
+const historiaClones =
+  Array.from(historiaCards, card => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute("aria-hidden", "true");
+    return clone;
+  });
+
+const historiaBeforeClones =
+  document.createDocumentFragment();
+
+historiaClones.forEach(clone => {
+  historiaBeforeClones.append(clone.cloneNode(true));
+});
+
+historiaTrack.prepend(historiaBeforeClones);
+
+historiaClones.forEach(clone => {
+  historiaTrack.append(clone);
+});
+
+const historiaPhysicalCards =
+  Array.from(historiaTrack.querySelectorAll(".historia-card"));
+
 const historiaLeft =
   document.querySelector(".historia-arrow-left");
 
@@ -655,34 +685,101 @@ const historiaDots =
   document.querySelectorAll(".historia-dot");
 
 
+function obtenerIndiceFisicoHistoria() {
+
+  const trackBounds =
+    historiaTrack.getBoundingClientRect();
+
+  const trackCenter =
+    trackBounds.left + historiaTrack.clientWidth / 2;
+
+  return historiaPhysicalCards.reduce(
+    (nearestIndex, card, index) => {
+      const bounds = card.getBoundingClientRect();
+      const cardCenter = bounds.left + bounds.width / 2;
+      const nearestBounds =
+        historiaPhysicalCards[nearestIndex].getBoundingClientRect();
+      const nearestCenter =
+        nearestBounds.left + nearestBounds.width / 2;
+
+      return Math.abs(cardCenter - trackCenter) <
+        Math.abs(nearestCenter - trackCenter)
+        ? index
+        : nearestIndex;
+    },
+    0
+  );
+
+}
+
+
+function centrarHistoria(indice, comportamiento = "smooth") {
+
+  const card =
+    historiaPhysicalCards[indice];
+
+  if (!card) return;
+
+  const trackBounds =
+    historiaTrack.getBoundingClientRect();
+
+  const cardBounds =
+    card.getBoundingClientRect();
+
+  const posicion =
+    historiaTrack.scrollLeft +
+    cardBounds.left +
+    cardBounds.width / 2 -
+    trackBounds.left -
+    historiaTrack.clientWidth / 2;
+
+  if (comportamiento === "instant") {
+    const scrollBehavior = historiaTrack.style.scrollBehavior;
+    historiaTrack.style.scrollBehavior = "auto";
+    historiaTrack.scrollLeft = posicion;
+    historiaTrack.style.scrollBehavior = scrollBehavior;
+    return;
+  }
+
+  historiaTrack.scrollTo({
+    left: posicion,
+    behavior: comportamiento
+  });
+
+}
+
+
+function actualizarPuntoHistoria() {
+
+  if (!historiaCardCount) return;
+
+  const indiceFisico =
+    obtenerIndiceFisicoHistoria();
+
+  const indiceLogico =
+    indiceFisico % historiaCardCount;
+
+  historiaDots.forEach((dot, index) => {
+    dot.classList.toggle("active", index === indiceLogico);
+  });
+
+}
+
+
+centrarHistoria(historiaCardCount, "instant");
+
+
 /* Mover el carrusel */
 
 function moverHistoria(direccion) {
 
-  if (!historiaCards.length) return;
+  const actual =
+    obtenerIndiceFisicoHistoria();
 
+  const siguiente =
+    actual + direccion;
 
-  const card =
-    historiaCards[0];
-
-  const cardStyle =
-    window.getComputedStyle(historiaTrack);
-
-  const gap =
-    parseFloat(cardStyle.columnGap) || 0;
-
-
-  const distancia =
-    card.offsetWidth + gap;
-
-
-  historiaTrack.scrollBy({
-
-    left: direccion * distancia,
-
-    behavior: "smooth"
-
-  });
+  centrarHistoria(siguiente);
 
 }
 
@@ -707,54 +804,7 @@ historiaRight.addEventListener(
 
 historiaTrack.addEventListener(
   "scroll",
-  () => {
-
-    if (!historiaCards.length) return;
-
-
-    const card =
-      historiaCards[0];
-
-    const cardStyle =
-      window.getComputedStyle(historiaTrack);
-
-    const gap =
-      parseFloat(cardStyle.columnGap) || 0;
-
-
-    const distancia =
-      card.offsetWidth + gap;
-
-
-    let actual =
-      Math.round(
-        historiaTrack.scrollLeft /
-        distancia
-      );
-
-
-    actual =
-      Math.max(
-        0,
-        Math.min(
-          actual,
-          historiaDots.length - 1
-        )
-      );
-
-
-    historiaDots.forEach(
-      (dot, index) => {
-
-        dot.classList.toggle(
-          "active",
-          index === actual
-        );
-
-      }
-    );
-
-  }
+  actualizarPuntoHistoria
 );
 
 
@@ -763,6 +813,7 @@ historiaTrack.addEventListener(
 ===================================================== */
 
 let historiaAutoPlay;
+let historiaScrollEndTimer;
 
 
 function iniciarHistoriaAutoPlay() {
@@ -770,34 +821,7 @@ function iniciarHistoriaAutoPlay() {
   historiaAutoPlay =
     setInterval(() => {
 
-      const maxScroll =
-        historiaTrack.scrollWidth -
-        historiaTrack.clientWidth;
-
-
-      /*
-       * Si hemos llegado al final,
-       * volvemos al principio.
-       */
-
-      if (
-        historiaTrack.scrollLeft >=
-        maxScroll - 10
-      ) {
-
-        historiaTrack.scrollTo({
-
-          left: 0,
-
-          behavior: "smooth"
-
-        });
-
-      } else {
-
-        moverHistoria(1);
-
-      }
+      moverHistoria(1);
 
     }, 4500);
 
@@ -809,6 +833,27 @@ function pararHistoriaAutoPlay() {
   clearInterval(historiaAutoPlay);
 
 }
+
+
+historiaTrack.addEventListener("scroll", () => {
+
+  actualizarPuntoHistoria();
+  clearTimeout(historiaScrollEndTimer);
+
+  historiaScrollEndTimer = setTimeout(() => {
+    const indiceFisico =
+      obtenerIndiceFisicoHistoria();
+
+    if (indiceFisico < historiaCardCount) {
+      centrarHistoria(indiceFisico + historiaCardCount, "instant");
+    } else if (indiceFisico >= historiaCardCount * 2) {
+      centrarHistoria(indiceFisico - historiaCardCount, "instant");
+    }
+
+    actualizarPuntoHistoria();
+  }, 140);
+
+});
 
 
 /*

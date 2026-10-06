@@ -8,3 +8,257 @@ main{overflow:hidden}.hero,.section,.closing{width:min(920px,calc(100% - 28px));
 form,#rsvp-search{max-width:620px;margin:2rem auto;text-align:left}label,legend{display:block;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.2rem;margin:1.2rem 0 .4rem}input,textarea{width:100%;border:1px solid rgba(89,104,70,.45);background:rgba(250,235,210,.35);color:var(--dark);padding:.85rem 1rem;border-radius:2px;font:inherit}fieldset{border:0;padding:0;margin:1.5rem 0}fieldset label{font-family:inherit;font-size:.9rem;font-weight:400}.guest-results{display:grid;gap:.5rem;margin-top:.8rem}.guest-option{border:1px solid rgba(89,104,70,.35);background:rgba(250,235,210,.45);color:var(--dark);padding:.75rem 1rem;text-align:left;cursor:pointer;font:inherit}.info-list{max-width:700px;margin:3rem auto}.info-list article{border-top:1px solid rgba(89,104,70,.35);padding:1rem 0}.info-list h3{margin:0}.info-list p{margin:0;font-size:.85rem}.closing{min-height:80svh;display:flex;flex-direction:column;justify-content:center;align-items:center}
 .menu-trigger{position:fixed;z-index:20;top:18px;right:18px;border:0;background:transparent;color:var(--dark);font-size:2rem;line-height:1;cursor:pointer}.menu{position:fixed;z-index:19;top:52px;right:18px;width:220px;padding:1.2rem;background:rgba(234,211,182,.98);border:1px solid rgba(89,104,70,.45);box-shadow:0 12px 35px rgba(50,45,30,.15);display:none}.menu.is-open{display:grid}.menu a{color:var(--dark);text-decoration:none;padding:.55rem .2rem;font-family:"Cormorant Garamond",serif;font-size:1.2rem}
 @media(max-width:480px){.hero,.section,.closing{padding-left:8vw;padding-right:8vw}.hero{padding-top:5rem}.photo{width:88vw}.timeline div{grid-template-columns:75px 1fr}}
+
+/* =========================================
+   NUESTRA HISTORIA — CARRUSEL
+========================================= */
+
+.historia {
+  overflow: hidden;
+}
+
+.story-intro {
+  max-width: 600px;
+  margin: 0 auto 45px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+
+/* CONTENEDOR */
+
+.story-carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+
+/* CARRUSEL */
+
+.story-carousel {
+  display: flex;
+  gap: 45px;
+
+  width: max-content;
+
+  padding: 20px 8vw 35px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+
+  cursor: grab;
+
+  scrollbar-width: none;
+
+  animation: storyScroll 35s linear infinite;
+}
+
+.story-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.story-carousel:hover {
+  animation-play-state: paused;
+}
+
+.story-carousel:active {
+  cursor: grabbing;
+}
+
+
+/* TARJETA */
+
+.story-card {
+  width: 300px;
+  flex: 0 0 300px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* FOTO */
+
+.story-photo {
+  width: 260px;
+  height: 260px;
+
+  padding: 10px;
+
+  background: #f4efe3;
+
+  border: 1px solid rgba(48, 70, 52, 0.25);
+
+  box-shadow:
+    0 8px 20px rgba(40, 55, 40, 0.12);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.story-card:hover .story-photo {
+  transform: translateY(-8px) rotate(-1deg);
+
+  box-shadow:
+    0 15px 30px rgba(40, 55, 40, 0.18);
+}
+
+
+/* TODAS LAS FOTOS ENCAJAN
+   SIN DISTORSIONARSE */
+
+.story-photo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+/* TEXTO */
+
+.story-card-text {
+  text-align: center;
+
+  max-width: 270px;
+
+  margin-top: 22px;
+}
+
+.story-card-text span {
+  display: block;
+
+  font-family: "Libre Baskerville", serif;
+
+  font-size: 0.72rem;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  color: #6f8068;
+
+  margin-bottom: 8px;
+}
+
+.story-card-text h3 {
+  margin: 0 0 10px;
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 1.65rem;
+
+  font-weight: 500;
+
+  color: #304634;
+}
+
+.story-card-text p {
+  margin: 0;
+
+  font-size: 0.9rem;
+
+  line-height: 1.7;
+
+  color: #5d665b;
+}
+
+
+/* INDICACIÓN DE SCROLL */
+
+.story-scroll-hint {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 15px;
+
+  margin-top: 15px;
+
+  font-family: "Libre Baskerville", serif;
+
+  font-size: 0.68rem;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: #7a8675;
+}
+
+.story-scroll-hint span {
+  font-size: 1.1rem;
+}
+
+
+/* ANIMACIÓN */
+
+@keyframes storyScroll {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-35%);
+  }
+
+}
+
+
+/* =========================================
+   MÓVIL
+========================================= */
+
+@media (max-width: 700px) {
+
+  .story-carousel {
+    gap: 25px;
+
+    padding-left: 25px;
+    padding-right: 25px;
+
+    animation-duration: 45s;
+  }
+
+  .story-card {
+    width: 230px;
+    flex-basis: 230px;
+  }
+
+  .story-photo {
+    width: 200px;
+    height: 200px;
+
+    padding: 8px;
+  }
+
+  .story-card-text {
+    max-width: 215px;
+  }
+
+  .story-card-text h3 {
+    font-size: 1.45rem;
+  }
+
+  .story-card-text p {
+    font-size: 0.82rem;
+  }
+
+  .story-scroll-hint {
+    font-size: 0.58rem;
+  }
+
+}

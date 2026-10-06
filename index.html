@@ -4,10 +4,358 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carmen & Nico · 27.08.27</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+/* =====================================================
+   CARRUSEL — NUESTRA HISTORIA
+   Todo el estilo está aquí para no tener que modificar
+   style.css
+===================================================== */
+
+.historia-carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 45px;
+}
+
+
+/* Ventana del carrusel */
+
+.historia-carousel-window {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+
+/* Fila horizontal */
+
+.historia-carousel-track {
+  display: flex;
+  flex-direction: row;
+  gap: 35px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+
+  padding: 15px 50px 35px;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+
+  cursor: grab;
+}
+
+.historia-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.historia-carousel-track:active {
+  cursor: grabbing;
+}
+
+
+/* Cada tarjeta */
+
+.historia-card {
+  flex: 0 0 300px;
+  width: 300px;
+
+  scroll-snap-align: center;
+
+  text-align: center;
+}
+
+
+/* Marco de la foto */
+
+.historia-card-photo {
+  width: 270px;
+  height: 270px;
+
+  margin: 0 auto;
+
+  padding: 10px;
+
+  background: #f7f2e8;
+
+  border: 1px solid rgba(48, 70, 52, 0.28);
+
+  box-shadow:
+    0 8px 22px rgba(40, 55, 40, 0.13);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.historia-card:hover .historia-card-photo {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 14px 28px rgba(40, 55, 40, 0.18);
+}
+
+
+/* Imagen */
+
+.historia-card-photo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+/* Texto */
+
+.historia-card-info {
+  margin-top: 20px;
+
+  padding: 0 8px;
+}
+
+
+.historia-card-year {
+  display: block;
+
+  font-family: "Libre Baskerville", serif;
+
+  font-size: 0.7rem;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  color: #71806b;
+
+  margin-bottom: 7px;
+}
+
+
+.historia-card-info h3 {
+  margin: 0 0 8px;
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 1.65rem;
+
+  font-weight: 500;
+
+  color: #304634;
+}
+
+
+.historia-card-info p {
+  margin: 0;
+
+  font-size: 0.88rem;
+
+  line-height: 1.65;
+
+  color: #60685d;
+}
+
+
+/* =====================================================
+   FLECHAS
+===================================================== */
+
+.historia-arrow {
+  position: absolute;
+
+  top: 135px;
+
+  z-index: 10;
+
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(48, 70, 52, 0.3);
+
+  background: #f5f0e5;
+
+  color: #304634;
+
+  font-size: 1.25rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(40, 55, 40, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.historia-arrow:hover {
+  transform: scale(1.08);
+
+  background: #ebe5d7;
+}
+
+
+.historia-arrow-left {
+  left: 5px;
+}
+
+
+.historia-arrow-right {
+  right: 5px;
+}
+
+
+/* =====================================================
+   INDICADORES
+===================================================== */
+
+.historia-dots {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 5px;
+}
+
+
+.historia-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #c7cec1;
+
+  transition:
+    width 0.25s ease,
+    background 0.25s ease;
+}
+
+
+.historia-dot.active {
+  width: 22px;
+
+  border-radius: 10px;
+
+  background: #5d7059;
+}
+
+
+/* Texto de ayuda */
+
+.historia-swipe {
+  margin-top: 15px;
+
+  text-align: center;
+
+  font-family: "Libre Baskerville", serif;
+
+  font-size: 0.65rem;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  color: #7a8576;
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .historia-carousel {
+    margin-top: 35px;
+  }
+
+  .historia-carousel-track {
+    gap: 20px;
+
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .historia-card {
+    flex: 0 0 245px;
+    width: 245px;
+  }
+
+  .historia-card-photo {
+    width: 215px;
+    height: 215px;
+
+    padding: 8px;
+  }
+
+  .historia-card-info h3 {
+    font-size: 1.45rem;
+  }
+
+  .historia-card-info p {
+    font-size: 0.82rem;
+  }
+
+  .historia-arrow {
+    width: 36px;
+    height: 36px;
+
+    top: 108px;
+
+    font-size: 1rem;
+  }
+
+  .historia-arrow-left {
+    left: 2px;
+  }
+
+  .historia-arrow-right {
+    right: 2px;
+  }
+
+  .historia-swipe {
+    font-size: 0.58rem;
+  }
+
+}
+
+</style>
+
 </head>
+
 <body>
+
 <button class="menu-trigger" aria-label="Abrir menú">⋮</button>
+
 <nav class="menu">
   <a href="#inicio">Inicio</a>
   <a href="#historia">Nuestra historia</a>
@@ -17,174 +365,1097 @@
   <a href="#info">Información</a>
 </nav>
 
+
 <main>
+
+<!-- =====================================================
+     INICIO
+===================================================== -->
+
 <section id="inicio" class="hero">
-  <p class="eyebrow">27 · 08 · 27</p>
-  <h1>Carmen <span>&amp;</span> Nico</h1>
-  <p class="venue">Finca Prados Moros · Guadarrama</p>
-  <div class="swans">♧ ♧</div>
-  <a class="scroll-cue" href="#historia">↓</a>
+
+  <p class="eyebrow">
+    27 · 08 · 27
+  </p>
+
+  <h1>
+    Carmen <span>&amp;</span> Nico
+  </h1>
+
+  <p class="venue">
+    Finca Prados Moros · Guadarrama
+  </p>
+
+  <div class="swans">
+    ♧ ♧
+  </div>
+
+  <a class="scroll-cue" href="#historia">
+    ↓
+  </a>
+
 </section>
 
-<section id="historia" class="section">
-  <p class="eyebrow">Nuestra historia</p>
-  <h2>Desde la universidad</h2>
-  <p class="intro">Dos caminos que empezaron mucho antes de saber que algún día se encontrarían.</p>
-  <div class="childhood-collage">
-    <figure class="photo">
-      <img src="images/40CFF4D0-2868-40C7-A7C7-CF625627007A_1_105_c.jpeg" alt="Carmen y Nico de pequeños">
-      <figcaption>Érase una vez...</figcaption>
-    </figure>
+
+<!-- =====================================================
+     NUESTRA HISTORIA
+===================================================== -->
+
+<section id="historia" class="section historia">
+
+  <p class="eyebrow">
+    Nuestra historia
+  </p>
+
+  <h2>
+    Desde la universidad
+  </h2>
+
+  <p class="intro">
+    Dos caminos que empezaron mucho antes de saber
+    que algún día se encontrarían.
+  </p>
+
+
+  <div class="historia-carousel">
+
+    <!-- FLECHA IZQUIERDA -->
+
+    <button
+      class="historia-arrow historia-arrow-left"
+      type="button"
+      aria-label="Historia anterior">
+      ←
+    </button>
+
+
+    <!-- VENTANA -->
+
+    <div class="historia-carousel-window">
+
+      <div class="historia-carousel-track">
+
+
+        <!-- =================================================
+             1 · DE PEQUEÑOS
+        ================================================== -->
+
+        <article class="historia-card">
+
+          <div class="historia-card-photo">
+
+            <img
+              src="images/carmen-y-nico-pequenos.jpg"
+              alt="Carmen y Nico de pequeños">
+
+          </div>
+
+          <div class="historia-card-info">
+
+            <span class="historia-card-year">
+              De pequeños
+            </span>
+
+            <h3>
+              Antes de conocernos
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             2 · 2016
+        ================================================== -->
+
+        <article class="historia-card">
+
+          <div class="historia-card-photo">
+
+            <img
+              src="images/2016.jpg"
+              alt="Carmen y Nico en 2016">
+
+          </div>
+
+          <div class="historia-card-info">
+
+            <span class="historia-card-year">
+              2016
+            </span>
+
+            <h3>
+              Nos conocimos en la misma clase de la universidad
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             3 · 2017
+        ================================================== -->
+
+        <article class="historia-card">
+
+          <div class="historia-card-photo">
+
+            <img
+              src="images/2017.jpg"
+              alt="Carmen y Nico en 2017">
+
+          </div>
+
+          <div class="historia-card-info">
+
+            <span class="historia-card-year">
+              2017
+            </span>
+
+            <h3>
+              Empezamos a salir
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             4 · 2022
+        ================================================== -->
+
+        <article class="historia-card">
+
+          <div class="historia-card-photo">
+
+            <img
+              src="images/2022.jpg"
+              alt="Carmen y Nico en 2022">
+
+          </div>
+
+          <div class="historia-card-info">
+
+            <span class="historia-card-year">
+              2022
+            </span>
+
+            <h3>
+              Nos graduamos
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             5 · 2025
+        ================================================== -->
+
+        <article class="historia-card">
+
+          <div class="historia-card-photo">
+
+            <img
+              src="images/2025.jpg"
+              alt="Carmen y Nico en 2025">
+
+          </div>
+
+          <div class="historia-card-info">
+
+            <span class="historia-card-year">
+              2025
+            </span>
+
+            <h3>
+              Nuestro hogar
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             6 · 2026
+        ================================================== -->
+
+        <article class="historia-card">
+
+          <div class="historia-card-photo">
+
+            <img
+              src="images/2026.jpg"
+              alt="Carmen y Nico en 2026">
+
+          </div>
+
+          <div class="historia-card-info">
+
+            <span class="historia-card-year">
+              2026
+            </span>
+
+            <h3>
+              El sí
+            </h3>
+
+          </div>
+
+        </article>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- FLECHA DERECHA -->
+
+    <button
+      class="historia-arrow historia-arrow-right"
+      type="button"
+      aria-label="Historia siguiente">
+      →
+    </button>
+
   </div>
-  <p class="story-copy">Entre risas, viajes, planes y muchas aventuras, hemos llegado hasta aquí. Y ahora queremos celebrar este nuevo capítulo contigo.</p>
+
+
+  <!-- PUNTITOS -->
+
+  <div class="historia-dots">
+
+    <span class="historia-dot active"></span>
+    <span class="historia-dot"></span>
+    <span class="historia-dot"></span>
+    <span class="historia-dot"></span>
+    <span class="historia-dot"></span>
+    <span class="historia-dot"></span>
+
+  </div>
+
+
+  <p class="historia-swipe">
+    ← Desliza para descubrir nuestra historia →
+  </p>
+
 </section>
+
+
+<!-- =====================================================
+     EL LUGAR
+===================================================== -->
 
 <section id="lugar" class="section">
-  <p class="eyebrow">El lugar</p>
-  <h2>Finca Prados Moros</h2>
-  <p class="place">Guadarrama</p>
-  <p class="intro">Un entorno natural y especial donde celebraremos este día tan importante.</p>
-  <a class="button" href="https://www.google.com/maps/search/?api=1&query=Finca%20Prados%20Moros%20Guadarrama" target="_blank" rel="noopener">Cómo llegar</a>
+
+  <p class="eyebrow">
+    El lugar
+  </p>
+
+  <h2>
+    Finca Prados Moros
+  </h2>
+
+  <p class="place">
+    Guadarrama
+  </p>
+
+  <p class="intro">
+    Un entorno natural y especial donde celebraremos
+    este día tan importante.
+  </p>
+
+  <a
+    class="button"
+    href="https://www.google.com/maps/search/?api=1&query=Finca%20Prados%20Moros%20Guadarrama"
+    target="_blank"
+    rel="noopener">
+    Cómo llegar
+  </a>
+
 </section>
+
+
+<!-- =====================================================
+     EL DÍA
+===================================================== -->
 
 <section id="dia" class="section">
-  <p class="eyebrow">El día</p>
-  <h2>Nos vemos allí</h2>
+
+  <p class="eyebrow">
+    El día
+  </p>
+
+  <h2>
+    Nos vemos allí
+  </h2>
+
   <div class="timeline">
-    <div><time>18:30</time><span>Apertura de puertas</span></div>
-    <div><time>19:00</time><span>Ceremonia</span></div>
-    <div><time>20:00</time><span>Cóctel</span></div>
-    <div><time>22:00</time><span>Cena</span></div>
-    <div><time>23:30</time><span>Fiesta</span></div>
+
+    <div>
+      <time>18:30</time>
+      <span>Apertura de puertas</span>
+    </div>
+
+    <div>
+      <time>19:00</time>
+      <span>Ceremonia</span>
+    </div>
+
+    <div>
+      <time>20:00</time>
+      <span>Cóctel</span>
+    </div>
+
+    <div>
+      <time>22:00</time>
+      <span>Cena</span>
+    </div>
+
+    <div>
+      <time>23:30</time>
+      <span>Fiesta</span>
+    </div>
+
   </div>
+
 </section>
+
+
+<!-- =====================================================
+     CONFIRMAR ASISTENCIA
+===================================================== -->
 
 <section id="rsvp" class="section">
-  <p class="eyebrow">Confirmar asistencia</p>
-  <h2>¿Nos acompañas?</h2>
+
+  <p class="eyebrow">
+    Confirmar asistencia
+  </p>
+
+  <h2>
+    ¿Nos acompañas?
+  </h2>
+
+
   <div id="rsvp-search">
-    <label for="guest-search">Busca tu nombre</label>
-    <input id="guest-search" type="text" autocomplete="name" placeholder="Nombre y apellido">
+
+    <label for="guest-search">
+      Busca tu nombre
+    </label>
+
+    <input
+      id="guest-search"
+      type="text"
+      autocomplete="name"
+      placeholder="Nombre y apellido">
+
     <div id="guest-results"></div>
+
   </div>
+
 
   <form id="rsvp-form" hidden>
-    <input type="hidden" id="guest-id">
+
+    <input
+      type="hidden"
+      id="guest-id">
+
+
     <h3 id="guest-greeting"></h3>
+
+
     <fieldset>
-      <legend>¿Vienes a la boda?</legend>
-      <label><input type="radio" name="attendance" value="yes" required> Sí, allí estaré</label>
-      <label><input type="radio" name="attendance" value="no"> No podré acompañaros</label>
+
+      <legend>
+        ¿Vienes a la boda?
+      </legend>
+
+      <label>
+        <input
+          type="radio"
+          name="attendance"
+          value="yes"
+          required>
+        Sí, allí estaré
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          name="attendance"
+          value="no">
+        No podré acompañaros
+      </label>
+
     </fieldset>
-    <label for="companion">Acompañante</label>
-    <input id="companion" type="text" placeholder="Nombre del acompañante">
-    <label for="allergies">Alergias / intolerancias</label>
-    <input id="allergies" type="text">
-    <label for="message">¿Algo que quieras contarnos?</label>
-    <textarea id="message" rows="4"></textarea>
-    <button class="button" type="submit">Confirmar asistencia ♡</button>
+
+
+    <label for="companion">
+      Acompañante
+    </label>
+
+    <input
+      id="companion"
+      type="text"
+      placeholder="Nombre del acompañante">
+
+
+    <label for="allergies">
+      Alergias / intolerancias
+    </label>
+
+    <input
+      id="allergies"
+      type="text">
+
+
+    <label for="message">
+      ¿Algo que quieras contarnos?
+    </label>
+
+    <textarea
+      id="message"
+      rows="4"></textarea>
+
+
+    <button
+      class="button"
+      type="submit">
+      Confirmar asistencia ♡
+    </button>
+
     <p id="form-message"></p>
+
   </form>
+
 </section>
+
+
+<!-- =====================================================
+     INFORMACIÓN
+===================================================== -->
 
 <section id="info" class="section">
-  <p class="eyebrow">Información útil</p>
-  <h2>Para que todo sea más fácil</h2>
+
+  <p class="eyebrow">
+    Información útil
+  </p>
+
+  <h2>
+    Para que todo sea más fácil
+  </h2>
+
+
   <div class="info-list">
-    <article><h3>Cómo llegar</h3><p>Indicaciones y mapa.</p></article>
-    <article><h3>Dónde dormir</h3><p>Hoteles y alojamientos cercanos.</p></article>
-    <article><h3>Dress code</h3><p>Elegante, cómodo y acorde al entorno.</p></article>
-    <article><h3>Después de la fiesta</h3><p>Transporte y opciones para volver.</p></article>
-    <article><h3>Regalos</h3><p>Si quieres darnos un detalle, aquí te contaremos cómo.</p></article>
+
+    <article>
+      <h3>
+        Cómo llegar
+      </h3>
+      <p>
+        Indicaciones y mapa.
+      </p>
+    </article>
+
+
+    <article>
+      <h3>
+        Dónde dormir
+      </h3>
+      <p>
+        Hoteles y alojamientos cercanos.
+      </p>
+    </article>
+
+
+    <article>
+      <h3>
+        Dress code
+      </h3>
+      <p>
+        Elegante, cómodo y acorde al entorno.
+      </p>
+    </article>
+
+
+    <article>
+      <h3>
+        Después de la fiesta
+      </h3>
+      <p>
+        Transporte y opciones para volver.
+      </p>
+    </article>
+
+
+    <article>
+      <h3>
+        Regalos
+      </h3>
+      <p>
+        Si quieres darnos un detalle,
+        aquí te contaremos cómo.
+      </p>
+    </article>
+
   </div>
+
 </section>
+
+
+<!-- =====================================================
+     CIERRE
+===================================================== -->
 
 <section class="closing">
-  <h2>Carmen &amp; Nico</h2>
-  <p>27 · 08 · 27</p>
-  <p>Nos vemos en Prados Moros.</p>
-  <div class="swans">♧ ♧</div>
+
+  <h2>
+    Carmen &amp; Nico
+  </h2>
+
+  <p>
+    27 · 08 · 27
+  </p>
+
+  <p>
+    Nos vemos en Prados Moros.
+  </p>
+
+  <div class="swans">
+    ♧ ♧
+  </div>
+
 </section>
+
 </main>
 
+
 <script>
-const API_URL = "PEGA_AQUI_LA_URL_DE_GOOGLE_APPS_SCRIPT";
 
-const menuTrigger = document.querySelector(".menu-trigger");
-const menu = document.querySelector(".menu");
-menuTrigger.addEventListener("click", () => menu.classList.toggle("is-open"));
-menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => menu.classList.remove("is-open")));
+/* =====================================================
+   GOOGLE APPS SCRIPT
+===================================================== */
 
-const search = document.querySelector("#guest-search");
-const results = document.querySelector("#guest-results");
-const form = document.querySelector("#rsvp-form");
+const API_URL =
+  "PEGA_AQUI_LA_URL_DE_GOOGLE_APPS_SCRIPT";
+
+
+/* =====================================================
+   MENÚ
+===================================================== */
+
+const menuTrigger =
+  document.querySelector(".menu-trigger");
+
+const menu =
+  document.querySelector(".menu");
+
+
+menuTrigger.addEventListener("click", () => {
+
+  menu.classList.toggle("is-open");
+
+});
+
+
+menu.querySelectorAll("a").forEach(a => {
+
+  a.addEventListener("click", () => {
+
+    menu.classList.remove("is-open");
+
+  });
+
+});
+
+
+/* =====================================================
+   CARRUSEL NUESTRA HISTORIA
+===================================================== */
+
+const historiaTrack =
+  document.querySelector(".historia-carousel-track");
+
+const historiaCards =
+  document.querySelectorAll(".historia-card");
+
+const historiaLeft =
+  document.querySelector(".historia-arrow-left");
+
+const historiaRight =
+  document.querySelector(".historia-arrow-right");
+
+const historiaDots =
+  document.querySelectorAll(".historia-dot");
+
+
+/* Mover el carrusel */
+
+function moverHistoria(direccion) {
+
+  if (!historiaCards.length) return;
+
+
+  const card =
+    historiaCards[0];
+
+  const cardStyle =
+    window.getComputedStyle(historiaTrack);
+
+  const gap =
+    parseFloat(cardStyle.columnGap) || 0;
+
+
+  const distancia =
+    card.offsetWidth + gap;
+
+
+  historiaTrack.scrollBy({
+
+    left: direccion * distancia,
+
+    behavior: "smooth"
+
+  });
+
+}
+
+
+/* Flecha izquierda */
+
+historiaLeft.addEventListener(
+  "click",
+  () => moverHistoria(-1)
+);
+
+
+/* Flecha derecha */
+
+historiaRight.addEventListener(
+  "click",
+  () => moverHistoria(1)
+);
+
+
+/* Actualizar los puntos */
+
+historiaTrack.addEventListener(
+  "scroll",
+  () => {
+
+    if (!historiaCards.length) return;
+
+
+    const card =
+      historiaCards[0];
+
+    const cardStyle =
+      window.getComputedStyle(historiaTrack);
+
+    const gap =
+      parseFloat(cardStyle.columnGap) || 0;
+
+
+    const distancia =
+      card.offsetWidth + gap;
+
+
+    let actual =
+      Math.round(
+        historiaTrack.scrollLeft /
+        distancia
+      );
+
+
+    actual =
+      Math.max(
+        0,
+        Math.min(
+          actual,
+          historiaDots.length - 1
+        )
+      );
+
+
+    historiaDots.forEach(
+      (dot, index) => {
+
+        dot.classList.toggle(
+          "active",
+          index === actual
+        );
+
+      }
+    );
+
+  }
+);
+
+
+/* =====================================================
+   MOVER AUTOMÁTICAMENTE EL CARRUSEL
+===================================================== */
+
+let historiaAutoPlay;
+
+
+function iniciarHistoriaAutoPlay() {
+
+  historiaAutoPlay =
+    setInterval(() => {
+
+      const maxScroll =
+        historiaTrack.scrollWidth -
+        historiaTrack.clientWidth;
+
+
+      /*
+       * Si hemos llegado al final,
+       * volvemos al principio.
+       */
+
+      if (
+        historiaTrack.scrollLeft >=
+        maxScroll - 10
+      ) {
+
+        historiaTrack.scrollTo({
+
+          left: 0,
+
+          behavior: "smooth"
+
+        });
+
+      } else {
+
+        moverHistoria(1);
+
+      }
+
+    }, 4500);
+
+}
+
+
+function pararHistoriaAutoPlay() {
+
+  clearInterval(historiaAutoPlay);
+
+}
+
+
+/*
+ * Si el usuario toca o mueve el carrusel,
+ * pausamos el movimiento automático.
+ */
+
+historiaTrack.addEventListener(
+  "pointerdown",
+  pararHistoriaAutoPlay
+);
+
+historiaTrack.addEventListener(
+  "mouseenter",
+  pararHistoriaAutoPlay
+);
+
+
+/* Volver a activarlo después */
+
+historiaTrack.addEventListener(
+  "mouseleave",
+  () => {
+
+    iniciarHistoriaAutoPlay();
+
+  }
+);
+
+
+/* Iniciar */
+
+iniciarHistoriaAutoPlay();
+
+
+/* =====================================================
+   RSVP
+===================================================== */
+
+const search =
+  document.querySelector("#guest-search");
+
+const results =
+  document.querySelector("#guest-results");
+
+const form =
+  document.querySelector("#rsvp-form");
+
 let timer;
 
+
 search.addEventListener("input", () => {
+
   clearTimeout(timer);
-  const q = search.value.trim();
-  if (q.length < 3) { results.innerHTML = ""; return; }
-  timer = setTimeout(() => findGuests(q), 350);
+
+  const q =
+    search.value.trim();
+
+
+  if (q.length < 3) {
+
+    results.innerHTML = "";
+
+    return;
+
+  }
+
+
+  timer =
+    setTimeout(
+      () => findGuests(q),
+      350
+    );
+
 });
+
 
 async function findGuests(q) {
-  if (API_URL.startsWith("PEGA_")) {
-    results.innerHTML = "<p>Conecta primero Google Apps Script.</p>";
+
+  if (
+    API_URL.startsWith("PEGA_")
+  ) {
+
+    results.innerHTML =
+      "<p>Conecta primero Google Apps Script.</p>";
+
     return;
+
   }
-  results.innerHTML = "<p>Buscando...</p>";
+
+
+  results.innerHTML =
+    "<p>Buscando...</p>";
+
+
   try {
-    const r = await fetch(`${API_URL}?action=search&q=${encodeURIComponent(q)}`);
-    const data = await r.json();
+
+    const r =
+      await fetch(
+        `${API_URL}?action=search&q=${encodeURIComponent(q)}`
+      );
+
+
+    const data =
+      await r.json();
+
+
     if (!data.guests.length) {
-      results.innerHTML = "<p>No hemos encontrado ese nombre.</p>";
+
+      results.innerHTML =
+        "<p>No hemos encontrado ese nombre.</p>";
+
       return;
+
     }
-    results.innerHTML = data.guests.map(g =>
-      `<button type="button" class="guest-option" data-id="${escapeHtml(g.id)}" data-name="${escapeHtml(g.name)}">${escapeHtml(g.name)}</button>`
-    ).join("");
-    results.querySelectorAll(".guest-option").forEach(b =>
-      b.addEventListener("click", () => selectGuest(b.dataset.id, b.dataset.name))
-    );
+
+
+    results.innerHTML =
+      data.guests.map(g =>
+
+        `<button
+          type="button"
+          class="guest-option"
+          data-id="${escapeHtml(g.id)}"
+          data-name="${escapeHtml(g.name)}">
+          ${escapeHtml(g.name)}
+        </button>`
+
+      ).join("");
+
+
+    results
+      .querySelectorAll(".guest-option")
+      .forEach(b =>
+
+        b.addEventListener(
+          "click",
+          () =>
+            selectGuest(
+              b.dataset.id,
+              b.dataset.name
+            )
+        )
+
+      );
+
+
   } catch {
-    results.innerHTML = "<p>No hemos podido conectar. Inténtalo de nuevo.</p>";
+
+    results.innerHTML =
+      "<p>No hemos podido conectar. Inténtalo de nuevo.</p>";
+
   }
+
 }
+
+
+/* =====================================================
+   SELECCIONAR INVITADO
+===================================================== */
 
 function selectGuest(id, name) {
-  document.querySelector("#guest-id").value = id;
-  document.querySelector("#guest-greeting").textContent = `¡Hola, ${name.split(" ")[0]}!`;
+
+  document.querySelector(
+    "#guest-id"
+  ).value = id;
+
+
+  document.querySelector(
+    "#guest-greeting"
+  ).textContent =
+    `¡Hola, ${name.split(" ")[0]}!`;
+
+
   form.hidden = false;
+
   results.innerHTML = "";
-  form.scrollIntoView({behavior:"smooth", block:"center"});
+
+
+  form.scrollIntoView({
+
+    behavior: "smooth",
+
+    block: "center"
+
+  });
+
 }
 
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  const attendance = document.querySelector('input[name="attendance"]:checked')?.value;
-  const payload = {
-    action:"rsvp",
-    guestId:document.querySelector("#guest-id").value,
-    attendance,
-    companion:document.querySelector("#companion").value,
-    allergies:document.querySelector("#allergies").value,
-    message:document.querySelector("#message").value
-  };
-  const msg = document.querySelector("#form-message");
-  msg.textContent = "Guardando...";
-  try {
-    const r = await fetch(API_URL, {method:"POST", body:JSON.stringify(payload)});
-    const data = await r.json();
-    msg.textContent = data.ok ? "¡Gracias! Hemos guardado vuestra respuesta ♡" : "No hemos podido guardar la respuesta.";
-    if (data.ok) form.reset();
-  } catch {
-    msg.textContent = "No hemos podido guardar la respuesta. Inténtalo de nuevo.";
+
+/* =====================================================
+   ENVIAR RSVP
+===================================================== */
+
+form.addEventListener(
+  "submit",
+  async e => {
+
+    e.preventDefault();
+
+
+    const attendance =
+      document.querySelector(
+        'input[name="attendance"]:checked'
+      )?.value;
+
+
+    const payload = {
+
+      action: "rsvp",
+
+      guestId:
+        document.querySelector(
+          "#guest-id"
+        ).value,
+
+      attendance,
+
+      companion:
+        document.querySelector(
+          "#companion"
+        ).value,
+
+      allergies:
+        document.querySelector(
+          "#allergies"
+        ).value,
+
+      message:
+        document.querySelector(
+          "#message"
+        ).value
+
+    };
+
+
+    const msg =
+      document.querySelector(
+        "#form-message"
+      );
+
+
+    msg.textContent =
+      "Guardando...";
+
+
+    try {
+
+      const r =
+        await fetch(
+          API_URL,
+          {
+            method: "POST",
+            body: JSON.stringify(payload)
+          }
+        );
+
+
+      const data =
+        await r.json();
+
+
+      msg.textContent =
+        data.ok
+          ? "¡Gracias! Hemos guardado vuestra respuesta ♡"
+          : "No hemos podido guardar la respuesta.";
+
+
+      if (data.ok) {
+
+        form.reset();
+
+      }
+
+
+    } catch {
+
+      msg.textContent =
+        "No hemos podido guardar la respuesta. Inténtalo de nuevo.";
+
+    }
+
   }
-});
+);
+
+
+/* =====================================================
+   SEGURIDAD
+===================================================== */
 
 function escapeHtml(v) {
-  return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+  return String(v).replace(
+    /[&<>"']/g,
+    c =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[c])
+  );
+
 }
+
 </script>
+
 </body>
 </html>

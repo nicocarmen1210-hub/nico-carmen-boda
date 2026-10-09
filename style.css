@@ -1119,7 +1119,7 @@ fieldset label {
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
 
-  padding: 15px 50px 35px;
+  padding: 15px 50px 24px;
 
   scrollbar-width: none;
 
@@ -1349,7 +1349,7 @@ fieldset label {
 /* Texto de ayuda */
 
 .historia-swipe {
-  margin-top: 15px;
+  margin: 10px 0 0;
 
   text-align: center;
 
@@ -1362,6 +1362,10 @@ fieldset label {
   text-transform: uppercase;
 
   color: #7a8576;
+}
+
+.historia > .section-scroll-cue {
+  margin-top: 1.5rem;
 }
 
 

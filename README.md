@@ -10,6 +10,10 @@ La pestaña `Invitados` debe tener estas columnas, en este orden:
 
 `confirmado` acepta `pendiente`, `si` o `no`. No añadas invitados desde la web: cada respuesta actualiza la fila del `id` existente.
 
+Para una respuesta pendiente, el campo de alergias empieza con `Ninguna`; se puede sustituir o borrar. Al editar una respuesta existente, se muestra el valor guardado. Las respuestas `si` y `no` se guardan por invitado. Los autobuses y las alergias solo se solicitan para quien confirma asistencia.
+
+Al volver a buscar un grupo con respuestas guardadas, cada persona verá las acciones **Ver respuesta** y **Editar respuesta**. Consultar no escribe en la hoja; editar precarga los datos y una nueva respuesta actualiza la misma fila y fecha de respuesta. La vista de respuestas emite un token temporal de grupo; los envíos solo se aceptan para IDs que pertenecen al grupo asociado a ese token.
+
 La hoja configurada en `google-apps-script.gs` es la proporcionada por Carmen y Nico. El script accede a la pestaña por el nombre `Invitados`, nunca por `gid`.
 
 ## Preparar y desplegar Google Apps Script
@@ -22,9 +26,9 @@ La hoja configurada en `google-apps-script.gs` es la proporcionada por Carmen y 
 6. Selecciona el tipo **Aplicación web**. Elige **Ejecutar como: Yo** y **Quién tiene acceso: Cualquier persona** para que el formulario estático pueda llamar al servicio.
 7. Pulsa **Implementar** y autoriza los permisos si Google vuelve a solicitarlos.
 8. Copia la URL de aplicación web que termina en `/exec`.
-9. En `index.html`, sustituye únicamente el texto `PEGA_AQUI_LA_URL_DE_GOOGLE_APPS_SCRIPT` de `API_URL` por la URL copiada. No publiques hasta haber hecho esta configuración.
+9. En **Implementar > Gestionar implementaciones**, edita la implementación web y publica una nueva versión con el código actualizado. Copia la URL `/exec` que muestre esa implementación y comprueba que `API_URL` en `index.html` usa esa dirección; no reutilices una URL antigua si creaste una implementación nueva.
 
-El código de Apps Script usa la autorización de la persona que lo despliega; no se incluyen credenciales de Google ni una clave de escritura en el HTML. La URL del servicio será visible en la web. Aunque el backend nunca comparte la hoja ni añade filas, el servicio público permite buscar nombres y actualizar una fila existente si se conoce su `id`. Este esquema no autentica de forma segura a cada invitado; para protegerse frente a cambios malintencionados haría falta añadir códigos privados por invitación o interponer un servicio con autenticación.
+El código de Apps Script usa la autorización de la persona que lo despliega; no se incluyen credenciales de Google ni una clave de escritura en el HTML. La URL del servicio será visible en la web. El token temporal impide que un envío modifique IDs ajenos al grupo autorizado, y el backend nunca añade filas. Como la búsqueda es pública, esto no es autenticación de identidad: para evitar que alguien busque otro nombre y consulte su invitación, hace falta añadir códigos privados por invitación o un servicio con autenticación.
 
 ## Probar antes de publicar la web
 
@@ -34,7 +38,8 @@ El código de Apps Script usa la autorización de la persona que lo despliega; n
 4. Antes de guardar, copia temporalmente los valores actuales de las celdas de `INV001` en las columnas D:I. Prueba una respuesta afirmativa para Carmen, eligiendo un autobús de ida y uno de vuelta. Comprueba que se actualizan `confirmado`, `alergias`, `autobusIda`, `autobusVuelta`, `mensaje` y `fechaRespuesta` en su propia fila.
 5. Cambia esa misma respuesta y envíala otra vez. Debe actualizar la misma fila de `INV001`, sin crear otra.
 6. Si hay otra persona en el grupo, responde por separado y comprueba que su fila conserva un estado independiente.
-7. Prueba una respuesta `no`: se guarda `no`, se vacían los datos de asistencia/autobús de esa persona y no se cuenta como pasajera en `Resumen`.
+7. Prueba una respuesta `no`: se guarda `no` y la fecha para esa persona, se ocultan los campos de asistencia y no se cuenta como pasajera en `Resumen`. Se conservan los datos previos de autobús/alergias de esa misma fila para que puedan recuperarse al cambiar otra vez a `si`.
+8. Para una respuesta ya guardada, pulsa **Ver respuesta** y comprueba que los datos se muestran en solo lectura. Vuelve, pulsa **Editar respuesta**, cambia un campo y guarda. Comprueba que solo cambia la fila individual y que la fecha avanza. Mantener la vista sin guardar no debe alterar la hoja.
 
 Al terminar, restaura en la fila `INV001` los valores D:I que copiaste antes de la prueba. No crees invitados adicionales para probar; las pruebas anteriores al guardado (búsqueda y carga del grupo) no modifican la hoja.
 

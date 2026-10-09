@@ -13,13 +13,17 @@
 
 <body>
 
-<button class="menu-trigger" aria-label="Abrir menú">
+<button
+  class="menu-trigger"
+  aria-label="Abrir menú"
+  aria-expanded="false"
+  aria-controls="page-menu">
   <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24">
     <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
   </svg>
 </button>
 
-<nav class="menu">
+<nav class="menu" id="page-menu">
   <a href="#inicio">Inicio</a>
   <a href="#historia">Nuestra historia</a>
   <a href="#lugar">El lugar</a>
@@ -544,7 +548,7 @@
 ===================================================== */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbx7TWH5OcZpxXaCZs_3Bvupinx4bLMnI3CR18nB81yucOUpiVqgYGkqf4IjPx_l5ncM/exec";
+  "https://script.google.com/macros/s/AKfycbxm6xgbb48zfcp-OK50FqiNXa_TOU1yBf4cqgaZnor6TEsMeeiZoU8ZchLQbRsSjNc/exec";
 
 
 /* =====================================================
@@ -560,7 +564,8 @@ const menu =
 
 menuTrigger.addEventListener("click", () => {
 
-  menu.classList.toggle("is-open");
+  const isOpen = menu.classList.toggle("is-open");
+  menuTrigger.setAttribute("aria-expanded", String(isOpen));
 
 });
 
@@ -570,6 +575,7 @@ menu.querySelectorAll("a").forEach(a => {
   a.addEventListener("click", () => {
 
     menu.classList.remove("is-open");
+    menuTrigger.setAttribute("aria-expanded", "false");
 
   });
 
@@ -846,8 +852,10 @@ function apiIsConfigured() {
 
 function jsonpRequest(params) {
   return new Promise((resolve, reject) => {
-    const callback = `cb_${crypto.getRandomValues(new Uint32Array(2))
-      .join("")}`;
+    const callback = `cb_${Array.from(
+      crypto.getRandomValues(new Uint32Array(2)),
+      value => value.toString(16)
+    ).join("")}`;
     const script = document.createElement("script");
     const timeout = window.setTimeout(() => {
       cleanup();
@@ -948,7 +956,7 @@ async function selectGuest(guestId) {
       "La invitación incluye a estas personas. Cada una puede responder de forma independiente.";
     groupContainer.append(instruction);
     data.guests.forEach((guest, index) => {
-      groupContainer.append(createGuestForm(guest, index));
+      groupContainer.append(createGuestForm(guest, index, data.accessToken));
     });
     groupContainer.hidden = false;
     showSearchMessage("");
@@ -960,15 +968,49 @@ async function selectGuest(guestId) {
   }
 }
 
-function createGuestForm(guest, index) {
+function createGuestForm(guest, index, accessToken) {
   const card = document.createElement("form");
   card.className = "guest-rsvp-card";
   card.dataset.guestId = guest.id;
-  card.noValidate = false;
+  card._guest = guest;
+  card._accessToken = accessToken;
 
   const heading = document.createElement("h3");
   heading.textContent = guest.name;
   card.append(heading);
+
+  const savedPrompt = document.createElement("div");
+  savedPrompt.className = "saved-response-prompt";
+  savedPrompt.hidden = true;
+
+  const savedMessage = document.createElement("p");
+  savedMessage.textContent = "Ya hemos guardado tu respuesta. ¿Qué quieres hacer?";
+  savedPrompt.append(savedMessage);
+
+  const savedActions = document.createElement("div");
+  savedActions.className = "saved-response-actions";
+
+  const viewButton = document.createElement("button");
+  viewButton.className = "guest-option";
+  viewButton.type = "button";
+  viewButton.textContent = "Ver respuesta";
+
+  const editButton = document.createElement("button");
+  editButton.className = "guest-option";
+  editButton.type = "button";
+  editButton.textContent = "Editar respuesta";
+
+  savedActions.append(viewButton, editButton);
+  savedPrompt.append(savedActions);
+  card.append(savedPrompt);
+
+  const savedView = document.createElement("div");
+  savedView.className = "saved-response-view";
+  savedView.hidden = true;
+  card.append(savedView);
+
+  const editor = document.createElement("div");
+  editor.className = "guest-rsvp-editor";
 
   const fieldset = document.createElement("fieldset");
   const legend = document.createElement("legend");
@@ -978,7 +1020,7 @@ function createGuestForm(guest, index) {
   const radioName = `attendance-${index}`;
   [
     ["si", "Sí, allí estaré"],
-    ["no", "No podré acompañaros"]
+    ["no", "No podré asistir"]
   ].forEach(([value, text], optionIndex) => {
     const label = document.createElement("label");
     const radio = document.createElement("input");
@@ -991,7 +1033,7 @@ function createGuestForm(guest, index) {
     label.append(radio, document.createTextNode(` ${text}`));
     fieldset.append(label);
   });
-  card.append(fieldset);
+  editor.append(fieldset);
 
   const details = document.createElement("div");
   details.className = "rsvp-attendance-details";
@@ -1000,10 +1042,11 @@ function createGuestForm(guest, index) {
   const allergies = addTextField(
     details,
     `allergies-${index}`,
-    "Alergias o necesidades alimentarias (escribe «Ninguna» si no tienes)",
-    guest.allergies || ""
+    "Alergias, intolerancias o necesidades alimentarias",
+    guest.attendance === "pendiente"
+      ? (guest.allergies || "Ninguna")
+      : (guest.allergies ?? "")
   );
-  allergies.required = true;
   allergies.placeholder = "Ninguna";
   allergies.maxLength = 1000;
 
@@ -1011,7 +1054,11 @@ function createGuestForm(guest, index) {
     details,
     `outbound-${index}`,
     "Autobús de ida",
-    [["moncloa", "Moncloa"], ["las_rozas", "Las Rozas"], ["no", "No necesito"]],
+    [
+      ["moncloa", "Desde Moncloa"],
+      ["las_rozas", "Desde Las Rozas"],
+      ["no", "No necesito autobús de ida"]
+    ],
     guest.outboundBus || ""
   );
   outboundBus.required = true;
@@ -1020,7 +1067,11 @@ function createGuestForm(guest, index) {
     details,
     `return-${index}`,
     "Autobús de vuelta",
-    [["las_rozas", "Las Rozas"], ["moncloa", "Moncloa"], ["no", "No necesito"]],
+    [
+      ["las_rozas", "Hacia Las Rozas"],
+      ["moncloa", "Hacia Moncloa"],
+      ["no", "No necesito autobús de vuelta"]
+    ],
     guest.returnBus || ""
   );
   returnBus.required = true;
@@ -1033,22 +1084,74 @@ function createGuestForm(guest, index) {
     true
   );
   message.maxLength = 2000;
-  card.append(details);
+  editor.append(details);
 
   const submit = document.createElement("button");
   submit.className = "button";
   submit.type = "submit";
   submit.textContent = "Guardar mi respuesta ♡";
-  card.append(submit);
+  editor.append(submit);
 
   const status = document.createElement("p");
   status.className = "rsvp-status";
   status.setAttribute("role", "status");
   status.setAttribute("aria-live", "polite");
   card.append(status);
+  card.append(editor);
 
-  card._rsvpFields = { details, allergies, outboundBus, returnBus, message };
+  card._rsvpFields = {
+    details,
+    editor,
+    fieldset,
+    allergies,
+    outboundBus,
+    returnBus,
+    message,
+    savedPrompt,
+    savedMessage,
+    viewButton,
+    editButton,
+    savedView,
+    status,
+    submit
+  };
+
+  viewButton.addEventListener("click", () => {
+    renderSavedResponse(card);
+    savedPrompt.hidden = true;
+    savedView.hidden = false;
+    editor.hidden = true;
+    status.textContent = "";
+  });
+  savedView.addEventListener("click", event => {
+    if (event.target.closest(".saved-response-back")) {
+      savedView.hidden = true;
+      savedPrompt.hidden = false;
+    }
+    if (event.target.closest(".saved-response-edit")) {
+      savedView.hidden = true;
+      savedPrompt.hidden = true;
+      editor.hidden = false;
+      status.textContent = "";
+      submit.textContent = "Guardar cambios ♡";
+      setEditorDisabled(card, false);
+      updateAttendanceFields(card);
+    }
+  });
+  editButton.addEventListener("click", () => {
+    savedPrompt.hidden = true;
+    savedView.hidden = true;
+    editor.hidden = false;
+    status.textContent = "";
+    submit.textContent = "Guardar cambios ♡";
+    setEditorDisabled(card, false);
+    updateAttendanceFields(card);
+  });
+
   updateAttendanceFields(card);
+  if (guest.attendance === "si" || guest.attendance === "no") {
+    showSavedResponse(card);
+  }
   return card;
 }
 
@@ -1088,11 +1191,96 @@ function addSelectField(container, id, labelText, options, value) {
 
 function updateAttendanceFields(card) {
   const attendance = card.querySelector('input[type="radio"]:checked')?.value;
-  const { details, outboundBus, returnBus } = card._rsvpFields;
+  const { details, allergies, outboundBus, returnBus } = card._rsvpFields;
   const confirmed = attendance === "si";
   details.hidden = !confirmed;
+  allergies.disabled = !confirmed;
   outboundBus.required = confirmed;
+  outboundBus.disabled = !confirmed;
   returnBus.required = confirmed;
+  returnBus.disabled = !confirmed;
+}
+
+function renderSavedResponse(card) {
+  const { savedView } = card._rsvpFields;
+  const guest = card._guest;
+  savedView.replaceChildren();
+
+  const heading = document.createElement("h4");
+  heading.textContent = "Respuesta de " + guest.name;
+  savedView.append(heading);
+
+  const attendance = document.createElement("p");
+  attendance.textContent = guest.attendance === "si"
+    ? "Asistirá a la boda."
+    : "No podrá asistir a la boda.";
+  savedView.append(attendance);
+
+  if (guest.attendance === "si") {
+    appendSavedDetail(
+      savedView,
+      "Alergias, intolerancias o necesidades alimentarias",
+      guest.allergies ?? ""
+    );
+    appendSavedDetail(savedView, "Autobús de ida", busLabel(guest.outboundBus, "ida"));
+    appendSavedDetail(savedView, "Autobús de vuelta", busLabel(guest.returnBus, "vuelta"));
+    if (guest.message) {
+      appendSavedDetail(savedView, "Mensaje", guest.message);
+    }
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "saved-response-actions";
+  const backButton = document.createElement("button");
+  backButton.type = "button";
+  backButton.className = "guest-option saved-response-back";
+  backButton.textContent = "Volver";
+  const editButton = document.createElement("button");
+  editButton.type = "button";
+  editButton.className = "guest-option saved-response-edit";
+  editButton.textContent = "Editar respuesta";
+  actions.append(backButton, editButton);
+  savedView.append(actions);
+}
+
+function appendSavedDetail(container, label, value) {
+  const paragraph = document.createElement("p");
+  const strong = document.createElement("strong");
+  strong.textContent = label + ": ";
+  paragraph.append(strong, document.createTextNode(value));
+  container.append(paragraph);
+}
+
+function busLabel(value, direction) {
+  const labels = direction === "ida"
+    ? {
+        moncloa: "Desde Moncloa",
+        las_rozas: "Desde Las Rozas",
+        no: "No necesita autobús de ida"
+      }
+    : {
+        las_rozas: "Hacia Las Rozas",
+        moncloa: "Hacia Moncloa",
+        no: "No necesita autobús de vuelta"
+      };
+  return labels[value] || "Sin seleccionar";
+}
+
+function setEditorDisabled(card, disabled) {
+  card._rsvpFields.editor.querySelectorAll("input, select, textarea, button")
+    .forEach(control => {
+      control.disabled = disabled;
+    });
+}
+
+function showSavedResponse(card) {
+  const { editor, savedPrompt, savedMessage, status } = card._rsvpFields;
+  editor.hidden = true;
+  savedPrompt.hidden = false;
+  savedMessage.textContent =
+    "Ya hemos guardado la respuesta de " + card._guest.name + ". ¿Quieres modificarla?";
+  setEditorDisabled(card, true);
+  status.textContent = "";
 }
 
 groupContainer.addEventListener("submit", async event => {
@@ -1118,6 +1306,7 @@ groupContainer.addEventListener("submit", async event => {
     action: "rsvp",
     requestId: "",
     guestId: card.dataset.guestId,
+    accessToken: card._accessToken,
     attendance,
     allergies: attendance === "si" ? allergies.value : "",
     outboundBus: attendance === "si" ? outboundBus.value : "",
@@ -1154,8 +1343,17 @@ groupContainer.addEventListener("submit", async event => {
     if (!data.ok) throw new Error(data.error || "No se pudo guardar la respuesta.");
 
     submissionState.delete(card);
-    status.textContent = "¡Gracias! Hemos guardado tu respuesta ♡";
-    button.textContent = "Respuesta guardada ♡";
+    const guest = card._guest;
+    guest.attendance = attendance;
+    if (attendance === "si") {
+      guest.allergies = allergies.value;
+      guest.outboundBus = outboundBus.value;
+      guest.returnBus = returnBus.value;
+      guest.message = message.value;
+    }
+    button.textContent = "Guardar cambios ♡";
+    showSavedResponse(card);
+    status.textContent = "¡Gracias! Hemos guardado la respuesta de " + guest.name + " ♡";
   } catch (error) {
     status.textContent = error.message ||
       "No hemos podido guardar tu respuesta. Comprueba la conexión e inténtalo de nuevo.";

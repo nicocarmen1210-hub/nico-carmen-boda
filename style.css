@@ -761,6 +761,28 @@ fieldset label {
   padding: 1.25rem;
 }
 
+.saved-response-prompt {
+  margin: .75rem 0 1rem;
+}
+
+.saved-response-prompt p {
+  margin: 0 0 .75rem;
+}
+
+.saved-response-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+
+.saved-response-actions .guest-option {
+  width: auto;
+}
+
+.guest-rsvp-editor[hidden] {
+  display: none;
+}
+
 .guest-rsvp-card h3 {
   margin-top: 0;
 }
@@ -836,7 +858,7 @@ fieldset label {
 
   top: 18px;
 
-  right: 18px;
+  left: 18px;
 
   display: grid;
   place-items: center;
@@ -867,7 +889,7 @@ fieldset label {
 
   top: 52px;
 
-  right: 18px;
+  left: 18px;
 
   width: 220px;
 

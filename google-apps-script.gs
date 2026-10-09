@@ -16,7 +16,8 @@ const GUEST_HEADERS = [
   "mensaje",
   "fechaRespuesta"
 ];
-const VALID_ATTENDANCE = ["si", "no"];
+const VALID_ATTENDANCE = ["pendiente", "si", "no"];
+const SAVABLE_ATTENDANCE = ["si", "no"];
 const VALID_OUTBOUND_BUS = ["moncloa", "las_rozas", "no"];
 const VALID_RETURN_BUS = ["las_rozas", "moncloa", "no"];
 
@@ -57,19 +58,21 @@ function doGet(e) {
         return respond_({ ok: false, error: "La invitación no tiene un grupo asignado." }, callback);
       }
 
+      const accessToken = Utilities.getUuid();
+      CacheService.getScriptCache().put("rsvp-group:" + accessToken, groupId, 21600);
       const guests = values.rows
         .filter(row => String(row[values.columns.grupoId] || "").trim() === groupId)
         .map(row => ({
           id: String(row[values.columns.id]),
           name: String(row[values.columns.nombre]),
-          attendance: String(row[values.columns.confirmado] || "pendiente").toLowerCase(),
+          attendance: normalizedAttendance_(row[values.columns.confirmado]),
           allergies: String(row[values.columns.alergias] || ""),
           outboundBus: String(row[values.columns.autobusIda] || ""),
           returnBus: String(row[values.columns.autobusVuelta] || ""),
           message: String(row[values.columns.mensaje] || "")
         }));
 
-      return respond_({ ok: true, guests: guests }, callback);
+      return respond_({ ok: true, accessToken: accessToken, guests: guests }, callback);
     }
 
     return respond_({ ok: false, error: "Acción no válida." }, callback);
@@ -89,10 +92,12 @@ function doPost(e) {
     }
 
     const guestId = String(data.guestId || "").trim();
-    const attendance = String(data.attendance || "").toLowerCase();
+    const attendance = String(data.attendance || "").trim().toLowerCase();
     const requestId = String(data.requestId || "").trim();
-    if (!guestId || !VALID_ATTENDANCE.includes(attendance) ||
-        !/^[a-zA-Z0-9-]{8,100}$/.test(requestId)) {
+    const accessToken = String(data.accessToken || "").trim();
+    if (!guestId || !SAVABLE_ATTENDANCE.includes(attendance) ||
+        !/^[a-zA-Z0-9-]{8,100}$/.test(requestId) ||
+        !/^[a-f0-9-]{36}$/i.test(accessToken)) {
       return json_({ ok: false, error: "Faltan datos válidos para guardar la respuesta." });
     }
 
@@ -102,13 +107,13 @@ function doPost(e) {
     let message = "";
 
     if (attendance === "si") {
-      outboundBus = String(data.outboundBus || "").toLowerCase();
-      returnBus = String(data.returnBus || "").toLowerCase();
+      outboundBus = String(data.outboundBus || "").trim().toLowerCase();
+      returnBus = String(data.returnBus || "").trim().toLowerCase();
       if (!VALID_OUTBOUND_BUS.includes(outboundBus) || !VALID_RETURN_BUS.includes(returnBus)) {
         return json_({ ok: false, error: "Selecciona una opción válida para cada trayecto de autobús." });
       }
-      allergies = sheetText_(data.allergies || "");
-      message = sheetText_(data.message || "");
+      allergies = String(data.allergies == null ? "Ninguna" : data.allergies);
+      message = String(data.message || "");
     }
 
     if (allergies.length > 1000 || message.length > 2000) {
@@ -120,12 +125,16 @@ function doPost(e) {
     }
 
     const cache = CacheService.getScriptCache();
+    const authorizedGroupId = cache.get("rsvp-group:" + accessToken);
+    if (!authorizedGroupId) {
+      return json_({ ok: false, error: "La invitación ha caducado. Vuelve a buscar tu nombre." });
+    }
     const cacheKey = "rsvp:" + requestId;
     const previousResponse = cache.get(cacheKey);
     if (previousResponse) {
       const previous = JSON.parse(previousResponse);
       const fingerprint = JSON.stringify([
-        guestId, attendance, allergies, outboundBus, returnBus, message
+        guestId, accessToken, attendance, allergies, outboundBus, returnBus, message
       ]);
       if (previous.fingerprint !== fingerprint) {
         return json_({ ok: false, error: "Este envío ya se utilizó con otros datos. Vuelve a intentarlo." });
@@ -139,21 +148,32 @@ function doPost(e) {
     if (!selected) {
       return json_({ ok: false, error: "No hemos encontrado a esa persona en la hoja." });
     }
+    const guestGroupId = String(selected[values.columns.grupoId] || "").trim();
+    if (guestGroupId !== authorizedGroupId) {
+      return json_({ ok: false, error: "Esa persona no pertenece a esta invitación." });
+    }
 
     const rowNumber = selected._rowNumber;
-    sheet.getRange(rowNumber, values.columns.confirmado + 1, 1, 6).setValues([[
-      attendance,
-      allergies,
-      outboundBus,
-      returnBus,
-      message,
-      new Date()
-    ]]);
+    if (attendance === "si") {
+      sheet.getRange(rowNumber, values.columns.alergias + 1).setNumberFormat("@");
+      sheet.getRange(rowNumber, values.columns.mensaje + 1).setNumberFormat("@");
+      sheet.getRange(rowNumber, values.columns.confirmado + 1, 1, 6).setValues([[
+        attendance,
+        allergies,
+        outboundBus,
+        returnBus,
+        message,
+        new Date()
+      ]]);
+    } else {
+      sheet.getRange(rowNumber, values.columns.confirmado + 1).setValue(attendance);
+      sheet.getRange(rowNumber, values.columns.fechaRespuesta + 1).setValue(new Date());
+    }
     SpreadsheetApp.flush();
 
     const response = { ok: true, message: "Respuesta guardada." };
     const fingerprint = JSON.stringify([
-      guestId, attendance, allergies, outboundBus, returnBus, message
+      guestId, accessToken, attendance, allergies, outboundBus, returnBus, message
     ]);
     cache.put(cacheKey, JSON.stringify({ fingerprint: fingerprint, response: response }), 21600);
     return json_(response);
@@ -247,9 +267,9 @@ function normalize_(value) {
     .trim();
 }
 
-function sheetText_(value) {
-  const text = String(value).trim();
-  return /^[=+\-@]/.test(text) ? "'" + text : text;
+function normalizedAttendance_(value) {
+  const attendance = String(value || "pendiente").trim().toLowerCase();
+  return VALID_ATTENDANCE.includes(attendance) ? attendance : "pendiente";
 }
 
 function respond_(value, callback) {

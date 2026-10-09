@@ -216,6 +216,45 @@ h3 {
   transform: translateY(4px);
 }
 
+.section-scroll-cue {
+  display: flex;
+  width: fit-content;
+  margin: 2.5rem auto 0;
+}
+
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  margin-top: 2rem;
+  color: var(--dark);
+  font-family: "Bocklin", Georgia, serif;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+.back-to-top svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform .2s ease;
+}
+
+.back-to-top:hover {
+  color: var(--green);
+}
+
+.back-to-top:hover svg {
+  transform: translateY(-3px);
+}
+
+.back-to-top:focus-visible,
+.scroll-cue:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 5px;
+}
+
 
 /* =====================================================
    ANTIGUA FOTO / POLAROID

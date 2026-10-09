@@ -65,11 +65,7 @@ function doGet(e) {
         .map(row => ({
           id: String(row[values.columns.id]),
           name: String(row[values.columns.nombre]),
-          attendance: normalizedAttendance_(row[values.columns.confirmado]),
-          allergies: String(row[values.columns.alergias] || ""),
-          outboundBus: String(row[values.columns.autobusIda] || ""),
-          returnBus: String(row[values.columns.autobusVuelta] || ""),
-          message: String(row[values.columns.mensaje] || "")
+          hasResponded: isAnswered_(row[values.columns.confirmado])
         }));
 
       return respond_({ ok: true, accessToken: accessToken, guests: guests }, callback);
@@ -270,6 +266,10 @@ function normalize_(value) {
 function normalizedAttendance_(value) {
   const attendance = String(value || "pendiente").trim().toLowerCase();
   return VALID_ATTENDANCE.includes(attendance) ? attendance : "pendiente";
+}
+
+function isAnswered_(value) {
+  return SAVABLE_ATTENDANCE.includes(normalizedAttendance_(value));
 }
 
 function respond_(value, callback) {

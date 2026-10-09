@@ -302,19 +302,15 @@
 
   <div class="historia-dots">
 
-    <span class="historia-dot active"></span>
-    <span class="historia-dot"></span>
-    <span class="historia-dot"></span>
-    <span class="historia-dot"></span>
-    <span class="historia-dot"></span>
-    <span class="historia-dot"></span>
+    <button class="historia-dot active" type="button" aria-label="Ver historia desde 1998" aria-pressed="true"></button>
+    <button class="historia-dot" type="button" aria-label="Ver historia de 2016" aria-pressed="false"></button>
+    <button class="historia-dot" type="button" aria-label="Ver historia de 2017" aria-pressed="false"></button>
+    <button class="historia-dot" type="button" aria-label="Ver historia de 2022" aria-pressed="false"></button>
+    <button class="historia-dot" type="button" aria-label="Ver historia de 2025" aria-pressed="false"></button>
+    <button class="historia-dot" type="button" aria-label="Ver historia de 2026" aria-pressed="false"></button>
 
   </div>
 
-
-  <p class="historia-swipe">
-    ← Desliza para descubrir nuestra historia →
-  </p>
 
   <a class="scroll-cue section-scroll-cue" href="#lugar" aria-label="Bajar a El lugar">
     <svg aria-hidden="true" viewBox="0 0 40 52">
@@ -728,18 +724,19 @@ function centrarHistoria(indice, comportamiento = "smooth") {
 }
 
 
-function actualizarPuntoHistoria() {
+function actualizarPuntoHistoria(
+  indiceFisico = obtenerIndiceFisicoHistoria()
+) {
 
   if (!historiaCardCount) return;
-
-  const indiceFisico =
-    obtenerIndiceFisicoHistoria();
 
   const indiceLogico =
     indiceFisico % historiaCardCount;
 
   historiaDots.forEach((dot, index) => {
-    dot.classList.toggle("active", index === indiceLogico);
+    const isActive = index === indiceLogico;
+    dot.classList.toggle("active", isActive);
+    dot.setAttribute("aria-pressed", String(isActive));
   });
 
 }
@@ -761,6 +758,14 @@ function moverHistoria(direccion) {
   centrarHistoria(siguiente);
 
 }
+
+historiaDots.forEach((dot, index) => {
+  dot.addEventListener("click", () => {
+    const targetIndex = historiaCardCount + index;
+    centrarHistoria(targetIndex);
+    actualizarPuntoHistoria(targetIndex);
+  });
+});
 
 
 /* Flecha izquierda */

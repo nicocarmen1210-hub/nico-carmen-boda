@@ -913,11 +913,9 @@ fieldset label {
 
   padding: 1.2rem;
 
-  background:
-    rgba(234,211,182,.98);
+  background: var(--green);
 
-  border:
-    1px solid rgba(89,104,70,.45);
+  border: 1px solid var(--paper);
 
   box-shadow:
     0 12px 35px rgba(50,45,30,.15);
@@ -930,7 +928,7 @@ fieldset label {
 }
 
 .menu a {
-  color: var(--dark);
+  color: var(--paper);
 
   text-decoration: none;
 
@@ -942,6 +940,18 @@ fieldset label {
     serif;
 
   font-size: 1.2rem;
+
+  transition: background-color .2s ease;
+}
+
+.menu a:hover,
+.menu a:active,
+.menu a:focus-visible {
+  background: var(--dark);
+}
+
+.menu a:focus-visible {
+  outline-color: var(--paper);
 }
 
 

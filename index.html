@@ -433,84 +433,11 @@
       autocomplete="name"
       placeholder="Nombre y apellido">
 
-    <div id="guest-results"></div>
-
+    <div id="guest-results" class="guest-results" aria-live="polite"></div>
   </div>
 
-
-  <form id="rsvp-form" hidden>
-
-    <input
-      type="hidden"
-      id="guest-id">
-
-
-    <h3 id="guest-greeting"></h3>
-
-
-    <fieldset>
-
-      <legend>
-        ¿Vienes a la boda?
-      </legend>
-
-      <label>
-        <input
-          type="radio"
-          name="attendance"
-          value="yes"
-          required>
-        Sí, allí estaré
-      </label>
-
-      <label>
-        <input
-          type="radio"
-          name="attendance"
-          value="no">
-        No podré acompañaros
-      </label>
-
-    </fieldset>
-
-
-    <label for="companion">
-      Acompañante
-    </label>
-
-    <input
-      id="companion"
-      type="text"
-      placeholder="Nombre del acompañante">
-
-
-    <label for="allergies">
-      Alergias / intolerancias
-    </label>
-
-    <input
-      id="allergies"
-      type="text">
-
-
-    <label for="message">
-      ¿Algo que quieras contarnos?
-    </label>
-
-    <textarea
-      id="message"
-      rows="4"></textarea>
-
-
-    <button
-      class="button"
-      type="submit">
-      Confirmar asistencia ♡
-    </button>
-
-    <p id="form-message"></p>
-
-  </form>
+  <p id="rsvp-search-message" class="rsvp-status" role="status" aria-live="polite"></p>
+  <div id="group-rsvp-container" hidden></div>
 
 </section>
 
@@ -617,7 +544,7 @@
 ===================================================== */
 
 const API_URL =
-  "PEGA_AQUI_LA_URL_DE_GOOGLE_APPS_SCRIPT";
+  "https://script.google.com/macros/s/AKfycbx7TWH5OcZpxXaCZs_3Bvupinx4bLMnI3CR18nB81yucOUpiVqgYGkqf4IjPx_l5ncM/exec";
 
 
 /* =====================================================
@@ -903,272 +830,339 @@ iniciarHistoriaAutoPlay();
    RSVP
 ===================================================== */
 
-const search =
-  document.querySelector("#guest-search");
+const search = document.querySelector("#guest-search");
+const results = document.querySelector("#guest-results");
+const searchMessage = document.querySelector("#rsvp-search-message");
+const groupContainer = document.querySelector("#group-rsvp-container");
+let searchTimer;
+let searchSequence = 0;
+let groupSequence = 0;
+const submissionState = new WeakMap();
 
-const results =
-  document.querySelector("#guest-results");
+function apiIsConfigured() {
+  return API_URL.startsWith("https://script.google.com/macros/s/") &&
+    API_URL.endsWith("/exec");
+}
 
-const form =
-  document.querySelector("#rsvp-form");
+function jsonpRequest(params) {
+  return new Promise((resolve, reject) => {
+    const callback = `cb_${crypto.getRandomValues(new Uint32Array(2))
+      .join("")}`;
+    const script = document.createElement("script");
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("El servidor tardó demasiado en responder."));
+    }, 15000);
 
-let timer;
-
-
-search.addEventListener("input", () => {
-
-  clearTimeout(timer);
-
-  const q =
-    search.value.trim();
-
-
-  if (q.length < 3) {
-
-    results.innerHTML = "";
-
-    return;
-
-  }
-
-
-  timer =
-    setTimeout(
-      () => findGuests(q),
-      350
-    );
-
-});
-
-
-async function findGuests(q) {
-
-  if (
-    API_URL.startsWith("PEGA_")
-  ) {
-
-    results.innerHTML =
-      "<p>Conecta primero Google Apps Script.</p>";
-
-    return;
-
-  }
-
-
-  results.innerHTML =
-    "<p>Buscando...</p>";
-
-
-  try {
-
-    const r =
-      await fetch(
-        `${API_URL}?action=search&q=${encodeURIComponent(q)}`
-      );
-
-
-    const data =
-      await r.json();
-
-
-    if (!data.guests.length) {
-
-      results.innerHTML =
-        "<p>No hemos encontrado ese nombre.</p>";
-
-      return;
-
+    function cleanup() {
+      window.clearTimeout(timeout);
+      delete window[callback];
+      script.remove();
     }
 
-
-    results.innerHTML =
-      data.guests.map(g =>
-
-        `<button
-          type="button"
-          class="guest-option"
-          data-id="${escapeHtml(g.id)}"
-          data-name="${escapeHtml(g.name)}">
-          ${escapeHtml(g.name)}
-        </button>`
-
-      ).join("");
-
-
-    results
-      .querySelectorAll(".guest-option")
-      .forEach(b =>
-
-        b.addEventListener(
-          "click",
-          () =>
-            selectGuest(
-              b.dataset.id,
-              b.dataset.name
-            )
-        )
-
-      );
-
-
-  } catch {
-
-    results.innerHTML =
-      "<p>No hemos podido conectar. Inténtalo de nuevo.</p>";
-
-  }
-
-}
-
-
-/* =====================================================
-   SELECCIONAR INVITADO
-===================================================== */
-
-function selectGuest(id, name) {
-
-  document.querySelector(
-    "#guest-id"
-  ).value = id;
-
-
-  document.querySelector(
-    "#guest-greeting"
-  ).textContent =
-    `¡Hola, ${name.split(" ")[0]}!`;
-
-
-  form.hidden = false;
-
-  results.innerHTML = "";
-
-
-  form.scrollIntoView({
-
-    behavior: "smooth",
-
-    block: "center"
-
-  });
-
-}
-
-
-/* =====================================================
-   ENVIAR RSVP
-===================================================== */
-
-form.addEventListener(
-  "submit",
-  async e => {
-
-    e.preventDefault();
-
-
-    const attendance =
-      document.querySelector(
-        'input[name="attendance"]:checked'
-      )?.value;
-
-
-    const payload = {
-
-      action: "rsvp",
-
-      guestId:
-        document.querySelector(
-          "#guest-id"
-        ).value,
-
-      attendance,
-
-      companion:
-        document.querySelector(
-          "#companion"
-        ).value,
-
-      allergies:
-        document.querySelector(
-          "#allergies"
-        ).value,
-
-      message:
-        document.querySelector(
-          "#message"
-        ).value
-
+    window[callback] = data => {
+      cleanup();
+      resolve(data);
+    };
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("No se pudo conectar con Google Apps Script."));
     };
 
+    const query = new URLSearchParams({ ...params, callback });
+    script.src = `${API_URL}?${query.toString()}`;
+    document.head.append(script);
+  });
+}
 
-    const msg =
-      document.querySelector(
-        "#form-message"
-      );
+function showSearchMessage(message) {
+  searchMessage.textContent = message;
+}
 
+search.addEventListener("input", () => {
+  window.clearTimeout(searchTimer);
+  searchSequence += 1;
+  groupSequence += 1;
+  results.replaceChildren();
+  groupContainer.replaceChildren();
+  groupContainer.hidden = true;
+  showSearchMessage("");
 
-    msg.textContent =
-      "Guardando...";
+  const query = search.value.trim();
+  if (query.length < 3) return;
 
+  if (!apiIsConfigured()) {
+    showSearchMessage("La conexión con Google Apps Script estará disponible cuando publiques el backend y añadas su URL.");
+    return;
+  }
 
-    try {
+  const sequence = searchSequence;
+  searchTimer = window.setTimeout(() => findGuests(query, sequence), 350);
+});
 
-      const r =
-        await fetch(
-          API_URL,
-          {
-            method: "POST",
-            body: JSON.stringify(payload)
-          }
-        );
+async function findGuests(query, sequence) {
+  showSearchMessage("Buscando invitaciones...");
 
+  try {
+    const data = await jsonpRequest({ action: "search", q: query });
+    if (sequence !== searchSequence) return;
+    if (!data.ok) throw new Error(data.error || "No se pudo completar la búsqueda.");
 
-      const data =
-        await r.json();
-
-
-      msg.textContent =
-        data.ok
-          ? "¡Gracias! Hemos guardado vuestra respuesta ♡"
-          : "No hemos podido guardar la respuesta.";
-
-
-      if (data.ok) {
-
-        form.reset();
-
-      }
-
-
-    } catch {
-
-      msg.textContent =
-        "No hemos podido guardar la respuesta. Inténtalo de nuevo.";
-
+    showSearchMessage("");
+    if (!data.guests.length) {
+      showSearchMessage("No hemos encontrado ese nombre.");
+      return;
     }
 
+    const options = data.guests.map(guest => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "guest-option";
+      button.textContent = guest.name;
+      button.addEventListener("click", () => selectGuest(guest.id));
+      return button;
+    });
+    results.replaceChildren(...options);
+  } catch (error) {
+    if (sequence === searchSequence) {
+      showSearchMessage(error.message || "No hemos podido conectar. Inténtalo de nuevo.");
+    }
   }
-);
-
-
-/* =====================================================
-   SEGURIDAD
-===================================================== */
-
-function escapeHtml(v) {
-
-  return String(v).replace(
-    /[&<>"']/g,
-    c =>
-      ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      }[c])
-  );
-
 }
+
+async function selectGuest(guestId) {
+  const sequence = ++groupSequence;
+  results.replaceChildren();
+  groupContainer.replaceChildren();
+  groupContainer.hidden = true;
+  showSearchMessage("Cargando las personas de la invitación...");
+
+  try {
+    const data = await jsonpRequest({ action: "group", guestId });
+    if (sequence !== groupSequence) return;
+    if (!data.ok) throw new Error(data.error || "No se pudo cargar la invitación.");
+
+    const instruction = document.createElement("p");
+    instruction.className = "rsvp-status";
+    instruction.textContent =
+      "La invitación incluye a estas personas. Cada una puede responder de forma independiente.";
+    groupContainer.append(instruction);
+    data.guests.forEach((guest, index) => {
+      groupContainer.append(createGuestForm(guest, index));
+    });
+    groupContainer.hidden = false;
+    showSearchMessage("");
+    groupContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (error) {
+    if (sequence === groupSequence) {
+      showSearchMessage(error.message || "No hemos podido cargar la invitación. Inténtalo de nuevo.");
+    }
+  }
+}
+
+function createGuestForm(guest, index) {
+  const card = document.createElement("form");
+  card.className = "guest-rsvp-card";
+  card.dataset.guestId = guest.id;
+  card.noValidate = false;
+
+  const heading = document.createElement("h3");
+  heading.textContent = guest.name;
+  card.append(heading);
+
+  const fieldset = document.createElement("fieldset");
+  const legend = document.createElement("legend");
+  legend.textContent = "¿Vienes a la boda?";
+  fieldset.append(legend);
+
+  const radioName = `attendance-${index}`;
+  [
+    ["si", "Sí, allí estaré"],
+    ["no", "No podré acompañaros"]
+  ].forEach(([value, text], optionIndex) => {
+    const label = document.createElement("label");
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = radioName;
+    radio.value = value;
+    radio.required = optionIndex === 0;
+    radio.checked = guest.attendance === value;
+    radio.addEventListener("change", () => updateAttendanceFields(card));
+    label.append(radio, document.createTextNode(` ${text}`));
+    fieldset.append(label);
+  });
+  card.append(fieldset);
+
+  const details = document.createElement("div");
+  details.className = "rsvp-attendance-details";
+  details.hidden = true;
+
+  const allergies = addTextField(
+    details,
+    `allergies-${index}`,
+    "Alergias o necesidades alimentarias (escribe «Ninguna» si no tienes)",
+    guest.allergies || ""
+  );
+  allergies.required = true;
+  allergies.placeholder = "Ninguna";
+  allergies.maxLength = 1000;
+
+  const outboundBus = addSelectField(
+    details,
+    `outbound-${index}`,
+    "Autobús de ida",
+    [["moncloa", "Moncloa"], ["las_rozas", "Las Rozas"], ["no", "No necesito"]],
+    guest.outboundBus || ""
+  );
+  outboundBus.required = true;
+
+  const returnBus = addSelectField(
+    details,
+    `return-${index}`,
+    "Autobús de vuelta",
+    [["las_rozas", "Las Rozas"], ["moncloa", "Moncloa"], ["no", "No necesito"]],
+    guest.returnBus || ""
+  );
+  returnBus.required = true;
+
+  const message = addTextField(
+    details,
+    `message-${index}`,
+    "Mensaje (opcional)",
+    guest.message || "",
+    true
+  );
+  message.maxLength = 2000;
+  card.append(details);
+
+  const submit = document.createElement("button");
+  submit.className = "button";
+  submit.type = "submit";
+  submit.textContent = "Guardar mi respuesta ♡";
+  card.append(submit);
+
+  const status = document.createElement("p");
+  status.className = "rsvp-status";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  card.append(status);
+
+  card._rsvpFields = { details, allergies, outboundBus, returnBus, message };
+  updateAttendanceFields(card);
+  return card;
+}
+
+function addTextField(container, id, labelText, value, multiline = false) {
+  const label = document.createElement("label");
+  label.htmlFor = id;
+  label.textContent = labelText;
+  const field = document.createElement(multiline ? "textarea" : "input");
+  field.id = id;
+  if (!multiline) field.type = "text";
+  if (multiline) field.rows = 3;
+  field.value = value;
+  container.append(label, field);
+  return field;
+}
+
+function addSelectField(container, id, labelText, options, value) {
+  const label = document.createElement("label");
+  label.htmlFor = id;
+  label.textContent = labelText;
+  const select = document.createElement("select");
+  select.id = id;
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Selecciona una opción";
+  select.append(placeholder);
+  options.forEach(([optionValue, text]) => {
+    const option = document.createElement("option");
+    option.value = optionValue;
+    option.textContent = text;
+    select.append(option);
+  });
+  select.value = value;
+  container.append(label, select);
+  return select;
+}
+
+function updateAttendanceFields(card) {
+  const attendance = card.querySelector('input[type="radio"]:checked')?.value;
+  const { details, outboundBus, returnBus } = card._rsvpFields;
+  const confirmed = attendance === "si";
+  details.hidden = !confirmed;
+  outboundBus.required = confirmed;
+  returnBus.required = confirmed;
+}
+
+groupContainer.addEventListener("submit", async event => {
+  const card = event.target.closest(".guest-rsvp-card");
+  if (!card) return;
+  event.preventDefault();
+
+  if (!apiIsConfigured()) {
+    card.querySelector(".rsvp-status").textContent =
+      "La conexión con Google Apps Script aún no está configurada.";
+    return;
+  }
+
+  const attendance = card.querySelector('input[type="radio"]:checked')?.value;
+  if (!attendance) {
+    card.querySelector(".rsvp-status").textContent =
+      "Selecciona si vienes o no antes de guardar.";
+    return;
+  }
+
+  const { allergies, outboundBus, returnBus, message } = card._rsvpFields;
+  const payload = {
+    action: "rsvp",
+    requestId: "",
+    guestId: card.dataset.guestId,
+    attendance,
+    allergies: attendance === "si" ? allergies.value : "",
+    outboundBus: attendance === "si" ? outboundBus.value : "",
+    returnBus: attendance === "si" ? returnBus.value : "",
+    message: attendance === "si" ? message.value : ""
+  };
+
+  const fingerprint = JSON.stringify(payload);
+  let state = submissionState.get(card);
+  if (!state || state.fingerprint !== fingerprint) {
+    state = {
+      fingerprint,
+      requestId: crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`
+    };
+    submissionState.set(card, state);
+  }
+  payload.requestId = state.requestId;
+
+  const button = card.querySelector('button[type="submit"]');
+  const status = card.querySelector(".rsvp-status");
+  button.disabled = true;
+  status.textContent = "Guardando tu respuesta...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=UTF-8" },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error(`El servidor respondió con error (${response.status}).`);
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.error || "No se pudo guardar la respuesta.");
+
+    submissionState.delete(card);
+    status.textContent = "¡Gracias! Hemos guardado tu respuesta ♡";
+    button.textContent = "Respuesta guardada ♡";
+  } catch (error) {
+    status.textContent = error.message ||
+      "No hemos podido guardar tu respuesta. Comprueba la conexión e inténtalo de nuevo.";
+  } finally {
+    button.disabled = false;
+  }
+});
 
 </script>
 

@@ -239,9 +239,34 @@ h3 {
 }
 
 .back-to-top:focus-visible,
-.scroll-cue:focus-visible {
+.scroll-cue:focus-visible,
+.menu-trigger:focus-visible,
+.menu a:focus-visible,
+.historia-arrow:focus-visible,
+.guest-option:focus-visible,
+.button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--green);
   outline-offset: 5px;
+}
+
+
+/* Los revelados solo se activan desde JavaScript, por lo que el
+   contenido permanece visible si el navegador no ejecuta scripts. */
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.reveal-pending.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 600ms ease,
+    transform 600ms cubic-bezier(.22, .61, .36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 
@@ -1442,6 +1467,7 @@ fieldset label {
   display: block;
   width: min(100%, 220px);
   aspect-ratio: 565 / 781;
+  pointer-events: none;
   background-color: var(--dark);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
@@ -1523,4 +1549,50 @@ fieldset label {
 .photo img,
 .historia-card-photo img {
   filter: grayscale(100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  .historia-carousel-track {
+    scroll-behavior: auto;
+  }
+
+  .hero > :not(.hero-title-layout),
+  .hero-title-layout,
+  .swan {
+    animation: none;
+  }
+
+  .hero > :not(.hero-title-layout),
+  .hero-title-layout {
+    opacity: 1;
+    transform: none;
+  }
+
+  .swan {
+    opacity: 1;
+    transform: translateY(33%) translateX(0);
+  }
+
+  .reveal-pending,
+  .reveal-pending.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .scroll-cue svg,
+  .back-to-top svg,
+  .historia-card-photo,
+  .historia-arrow,
+  .historia-dot {
+    transition: none;
+  }
+
+  .scroll-cue:hover svg,
+  .back-to-top:hover svg,
+  .historia-card:hover .historia-card-photo,
+  .historia-arrow:hover {
+    transform: none;
+  }
 }

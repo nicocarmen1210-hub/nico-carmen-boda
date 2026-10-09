@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carmen & Nico · 27.08.27</title>
 
-<link rel="stylesheet" href="style.css?v=dc4f9c9">
+<link rel="stylesheet" href="style.css?v=motion-20261009">
 
 
 
@@ -582,6 +582,68 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbxm6xgbb48zfcp-OK50FqiNXa_TOU1yBf4cqgaZnor6TEsMeeiZoU8ZchLQbRsSjNc/exec";
 
+/* =====================================================
+   REVELADO PROGRESIVO
+===================================================== */
+
+const reducedMotionPreference =
+  window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function prepararReveladoAlDesplazarse() {
+  if (reducedMotionPreference.matches ||
+      !("IntersectionObserver" in window)) {
+    return null;
+  }
+
+  const revealTargets = document.querySelectorAll([
+    ".section > .eyebrow",
+    ".section > h2",
+    ".section > .intro",
+    ".section > .place",
+    ".section > .historia-carousel",
+    ".section > .historia-dots",
+    ".section > .place-map",
+    ".section > .button",
+    ".section > .timeline > div",
+    ".section > .info-list > article",
+    ".closing > h2",
+    ".closing > p",
+    ".closing > .back-to-top"
+  ].join(", "));
+
+  const observer = new IntersectionObserver((entries, activeObserver) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-revealed");
+      activeObserver.unobserve(entry.target);
+    });
+  }, {
+    rootMargin: "0px 0px -8% 0px",
+    threshold: 0.12
+  });
+
+  const delaysBySection = new Map();
+  revealTargets.forEach(target => {
+    const section = target.closest(".section, .closing");
+    const delayIndex = delaysBySection.get(section) || 0;
+    delaysBySection.set(section, delayIndex + 1);
+    target.style.setProperty(
+      "--reveal-delay",
+      `${Math.min(delayIndex, 4) * 70}ms`
+    );
+    const bounds = target.getBoundingClientRect();
+    if (bounds.bottom > 0 && bounds.top < window.innerHeight) {
+      target.classList.add("is-revealed");
+    }
+    target.classList.add("reveal-pending");
+    observer.observe(target);
+  });
+
+  return observer;
+}
+
+const scrollRevealObserver = prepararReveladoAlDesplazarse();
+
 
 /* =====================================================
    MENÚ
@@ -611,6 +673,14 @@ menu.querySelectorAll("a").forEach(a => {
 
   });
 
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  if (!menu.classList.contains("is-open")) return;
+  menu.classList.remove("is-open");
+  menuTrigger.setAttribute("aria-expanded", "false");
+  menuTrigger.focus();
 });
 
 
@@ -688,7 +758,10 @@ function obtenerIndiceFisicoHistoria() {
 }
 
 
-function centrarHistoria(indice, comportamiento = "smooth") {
+function centrarHistoria(
+  indice,
+  comportamiento = reducedMotionPreference.matches ? "auto" : "smooth"
+) {
 
   const card =
     historiaPhysicalCards[indice];
@@ -796,26 +869,35 @@ historiaTrack.addEventListener(
    MOVER AUTOMÁTICAMENTE EL CARRUSEL
 ===================================================== */
 
-let historiaAutoPlay;
+let historiaAutoPlay = null;
+let historiaResumeTimer = null;
 let historiaScrollEndTimer;
+let historiaEstaVisible = !("IntersectionObserver" in window);
 
 
 function iniciarHistoriaAutoPlay() {
+  window.clearTimeout(historiaResumeTimer);
+  historiaResumeTimer = null;
+  if (reducedMotionPreference.matches ||
+      document.hidden ||
+      !historiaEstaVisible ||
+      historiaTrack.matches(":hover") ||
+      historiaAutoPlay !== null) {
+    return;
+  }
 
-  historiaAutoPlay =
-    setInterval(() => {
+  historiaAutoPlay = window.setInterval(() => {
+    moverHistoria(1);
+  }, 2000);
 
-      moverHistoria(1);
-
-    }, 2000);
 
 }
 
 
 function pararHistoriaAutoPlay() {
-
-  clearInterval(historiaAutoPlay);
-
+  if (historiaAutoPlay === null) return;
+  window.clearInterval(historiaAutoPlay);
+  historiaAutoPlay = null;
 }
 
 
@@ -850,10 +932,39 @@ historiaTrack.addEventListener(
   pararHistoriaAutoPlay
 );
 
+function programarReinicioHistoria() {
+  window.clearTimeout(historiaResumeTimer);
+  historiaResumeTimer = window.setTimeout(iniciarHistoriaAutoPlay, 5000);
+}
+
+historiaTrack.addEventListener("pointerup", programarReinicioHistoria);
+historiaTrack.addEventListener("pointercancel", programarReinicioHistoria);
+
 historiaTrack.addEventListener(
   "mouseenter",
   pararHistoriaAutoPlay
 );
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    pararHistoriaAutoPlay();
+  } else {
+    iniciarHistoriaAutoPlay();
+  }
+});
+
+reducedMotionPreference.addEventListener?.("change", event => {
+  if (event.matches) {
+    pararHistoriaAutoPlay();
+    if (scrollRevealObserver) {
+      scrollRevealObserver.disconnect();
+      document.querySelectorAll(".reveal-pending")
+        .forEach(target => target.classList.add("is-revealed"));
+    }
+  } else {
+    iniciarHistoriaAutoPlay();
+  }
+});
 
 
 /* Volver a activarlo después */
@@ -866,6 +977,22 @@ historiaTrack.addEventListener(
 
   }
 );
+
+if ("IntersectionObserver" in window) {
+  const historiaVisibilityObserver = new IntersectionObserver(entries => {
+    const isVisible = entries.some(entry => entry.isIntersecting);
+    if (historiaEstaVisible === isVisible) return;
+
+    historiaEstaVisible = isVisible;
+    if (isVisible) {
+      iniciarHistoriaAutoPlay();
+    } else {
+      pararHistoriaAutoPlay();
+    }
+  }, { threshold: 0.05 });
+
+  historiaVisibilityObserver.observe(historiaTrack);
+}
 
 
 /* Iniciar */
@@ -1001,7 +1128,10 @@ async function selectGuest(guestId) {
     });
     groupContainer.hidden = false;
     showSearchMessage("");
-    groupContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+    groupContainer.scrollIntoView({
+      behavior: reducedMotionPreference.matches ? "auto" : "smooth",
+      block: "center"
+    });
   } catch (error) {
     if (sequence === groupSequence) {
       showSearchMessage(error.message || "No hemos podido cargar la invitación. Inténtalo de nuevo.");

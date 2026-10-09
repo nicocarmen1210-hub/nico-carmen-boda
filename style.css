@@ -859,7 +859,7 @@ fieldset label {
 ===================================================== */
 
 .closing {
-  min-height: 80svh;
+  min-height: 100svh;
 
   display: flex;
 

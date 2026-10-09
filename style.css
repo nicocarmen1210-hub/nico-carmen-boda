@@ -236,8 +236,9 @@ h3 {
 }
 
 .back-to-top svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  display: block;
+  width: 2rem;
+  height: 2rem;
   transition: transform .2s ease;
 }
 
@@ -246,7 +247,7 @@ h3 {
 }
 
 .back-to-top:hover svg {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
 .back-to-top:focus-visible,

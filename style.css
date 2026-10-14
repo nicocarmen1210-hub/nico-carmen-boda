@@ -1873,9 +1873,12 @@ fieldset label {
   text-align: left;
 }
 
-.dress-panel,
 .gift-panel {
   min-height: 350px;
+}
+
+.dress-panel {
+  min-height: 430px;
 }
 
 .dress-content,
@@ -1883,18 +1886,15 @@ fieldset label {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
 }
 
-.dress-flower,
 .gift-ornament {
   color: rgba(234, 211, 182, .78);
   font-size: 2.2rem;
   line-height: 1;
 }
 
-.dress-quote,
 .gift-message {
   max-width: 360px;
   margin: .7rem auto !important;
@@ -1907,6 +1907,72 @@ fieldset label {
 
 .gift-message {
   font-size: clamp(1.35rem, 4vw, 1.8rem);
+}
+
+.dress-ornament {
+  flex: 0 0 auto;
+  margin: -.35rem auto .1rem;
+  color: rgba(234, 211, 182, .8);
+  font-family: "Bocklin", Georgia, serif;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.dress-panel > .info-dialog-eyebrow {
+  margin-bottom: .2rem;
+}
+
+.dress-panel > h2 {
+  margin-bottom: .35rem;
+}
+
+.dress-subtitle {
+  flex: 0 0 auto;
+  margin: 0 0 .35rem !important;
+  color: rgba(234, 211, 182, .9);
+  font-size: .76rem;
+  letter-spacing: .055em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.dress-category {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: .55rem .25rem .6rem;
+  text-align: center;
+}
+
+.dress-category + .dress-category {
+  border-top: 1px solid rgba(234, 211, 182, .28);
+}
+
+.dress-category h3 {
+  margin: 0;
+  color: var(--paper);
+  font-family: "Bocklin", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.dress-category p {
+  max-width: 430px;
+  margin: .2rem auto 0;
+  color: rgba(234, 211, 182, .94);
+  font-size: .78rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.dress-closing {
+  flex: 0 0 auto;
+  margin: .5rem auto .1rem !important;
+  color: var(--paper);
+  font-size: .79rem;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .calendar-dialog {
@@ -1998,6 +2064,36 @@ fieldset label {
   .info-dialog-content {
     padding-top: .65rem;
     font-size: .83rem;
+  }
+
+  .dress-panel {
+    min-height: 0;
+  }
+
+  .dress-panel .info-dialog-content {
+    padding-top: .35rem;
+  }
+
+  .dress-ornament {
+    margin-top: -.5rem;
+    font-size: 1.5rem;
+  }
+
+  .dress-category {
+    padding: .4rem .15rem .45rem;
+  }
+
+  .dress-category h3 {
+    font-size: 1.15rem;
+  }
+
+  .dress-category p {
+    font-size: .77rem;
+    line-height: 1.5;
+  }
+
+  .dress-closing {
+    margin-top: .35rem !important;
   }
 
   .arrival-content {

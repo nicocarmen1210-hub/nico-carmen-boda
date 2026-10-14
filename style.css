@@ -855,6 +855,23 @@ fieldset label {
   font-size: .85rem;
 }
 
+.calendar-options h3 {
+  margin-bottom: .35rem;
+}
+
+.calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.calendar-actions .button {
+  max-width: 100%;
+  text-align: center;
+}
+
 
 /* =====================================================
    CIERRE

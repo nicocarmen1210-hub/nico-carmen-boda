@@ -1957,16 +1957,6 @@ fieldset label {
   margin-bottom: .35rem;
 }
 
-.dress-subtitle {
-  flex: 0 0 auto;
-  margin: 0 0 .35rem !important;
-  color: rgba(234, 211, 182, .9);
-  font-size: .76rem;
-  letter-spacing: .055em;
-  line-height: 1.5;
-  text-align: center;
-}
-
 .dress-category {
   flex: 0 0 auto;
   width: 100%;
@@ -1993,16 +1983,6 @@ fieldset label {
   color: rgba(234, 211, 182, .94);
   font-size: .78rem;
   line-height: 1.55;
-  text-align: center;
-}
-
-.dress-closing {
-  flex: 0 0 auto;
-  margin: .5rem auto .1rem !important;
-  color: var(--paper);
-  font-size: .79rem;
-  font-style: italic;
-  line-height: 1.5;
   text-align: center;
 }
 
@@ -2121,10 +2101,6 @@ fieldset label {
   .dress-category p {
     font-size: .77rem;
     line-height: 1.5;
-  }
-
-  .dress-closing {
-    margin-top: .35rem !important;
   }
 
   .arrival-content {

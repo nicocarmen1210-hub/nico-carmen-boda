@@ -1823,6 +1823,15 @@ fieldset label {
   line-height: 1.65;
 }
 
+.arrival-place p + p {
+  margin-top: .65rem;
+}
+
+.arrival-address-detail {
+  color: rgba(234, 211, 182, .78);
+  font-size: .72rem;
+}
+
 .dialog-button {
   display: inline-flex;
   min-height: 44px;
@@ -1853,6 +1862,16 @@ fieldset label {
   align-self: stretch;
 }
 
+.arrival-transport-block + .arrival-transport-block {
+  margin-top: .8rem;
+  padding-top: .8rem;
+  border-top: 1px solid rgba(234, 211, 182, .28);
+}
+
+.arrival-transport-block p + p {
+  margin-top: .55rem;
+}
+
 .dialog-lead {
   margin: 0 0 1rem !important;
   color: var(--paper);
@@ -1866,6 +1885,18 @@ fieldset label {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.lodging-message {
+  max-width: 440px;
+  margin: auto !important;
+  font-size: .86rem;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.return-content p + p {
+  margin-top: .7rem;
 }
 
 .lodging-placeholder,

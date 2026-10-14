@@ -483,74 +483,49 @@
   <div class="info-list">
 
     <article>
-      <h3>
-        Cómo llegar
-      </h3>
-      <p>
-        Indicaciones y mapa.
-      </p>
+      <button class="info-trigger" type="button" data-info-dialog="dialog-llegar" aria-haspopup="dialog">
+        <span class="info-trigger-copy"><span class="info-trigger-title">Cómo llegar</span><span class="info-trigger-description">Indicaciones y mapa.</span></span>
+        <span class="info-trigger-mark" aria-hidden="true">＋</span>
+      </button>
     </article>
 
 
     <article>
-      <h3>
-        Dónde dormir
-      </h3>
-      <p>
-        Hoteles y alojamientos cercanos.
-      </p>
+      <button class="info-trigger" type="button" data-info-dialog="dialog-dormir" aria-haspopup="dialog">
+        <span class="info-trigger-copy"><span class="info-trigger-title">Dónde dormir</span><span class="info-trigger-description">Hoteles y alojamientos cercanos.</span></span>
+        <span class="info-trigger-mark" aria-hidden="true">＋</span>
+      </button>
     </article>
 
 
     <article>
-      <h3>
-        Dress code
-      </h3>
-      <p>
-        Elegante, cómodo y acorde al entorno.
-      </p>
+      <button class="info-trigger" type="button" data-info-dialog="dialog-dress-code" aria-haspopup="dialog">
+        <span class="info-trigger-copy"><span class="info-trigger-title">Dress code</span><span class="info-trigger-description">Elegante, cómodo y acorde al entorno.</span></span>
+        <span class="info-trigger-mark" aria-hidden="true">＋</span>
+      </button>
     </article>
 
 
     <article>
-      <h3>
-        Después de la fiesta
-      </h3>
-      <p>
-        Transporte y opciones para volver.
-      </p>
+      <button class="info-trigger" type="button" data-info-dialog="dialog-vuelta" aria-haspopup="dialog">
+        <span class="info-trigger-copy"><span class="info-trigger-title">Después de la fiesta</span><span class="info-trigger-description">Transporte y opciones para volver.</span></span>
+        <span class="info-trigger-mark" aria-hidden="true">＋</span>
+      </button>
     </article>
 
 
     <article>
-      <h3>
-        Regalos
-      </h3>
-      <p>
-        Si quieres darnos un detalle,
-        aquí te contaremos cómo.
-      </p>
+      <button class="info-trigger" type="button" data-info-dialog="dialog-regalos" aria-haspopup="dialog">
+        <span class="info-trigger-copy"><span class="info-trigger-title">Regalos</span><span class="info-trigger-description">Si quieres darnos un detalle, aquí te contaremos cómo.</span></span>
+        <span class="info-trigger-mark" aria-hidden="true">＋</span>
+      </button>
     </article>
 
     <article class="calendar-options">
-      <h3>
-        Añadir a mi calendario
-      </h3>
-      <p>
-        Guarda la fecha de nuestra boda en tu calendario.
-      </p>
-      <div class="calendar-actions">
-        <a
-          class="button"
-          href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Boda+de+Carmen+y+Nico&amp;dates=20270827T183000%2F20270828T040000&amp;ctz=Europe%2FMadrid&amp;location=Finca+Prados+Moros%2C+Ctra.+M-600%2C+km+0%2C2%2C+28440+Guadarrama%2C+Madrid%2C+Espa%C3%B1a&amp;details=%C2%A1Nos+casamos%21+Guarda+la+fecha+y+acomp%C3%A1%C3%B1anos+a+celebrar+nuestro+d%C3%ADa.+Consulta+la+web+de+nuestra+boda+para+ver+los+detalles+y+la+informaci%C3%B3n+pr%C3%A1ctica"
-          target="_blank"
-          rel="noopener noreferrer">
-          Añadir a Google Calendar
-        </a>
-        <a class="button" href="boda-carmen-y-nico.ics" download="boda-carmen-y-nico.ics">
-          Descargar archivo de calendario (.ics)
-        </a>
-      </div>
+      <button class="info-trigger" type="button" data-info-dialog="dialog-calendario" aria-haspopup="dialog">
+        <span class="info-trigger-copy"><span class="info-trigger-title">Añadir a mi calendario</span><span class="info-trigger-description">Guarda la fecha de nuestra boda en tu calendario.</span></span>
+        <span class="info-trigger-mark" aria-hidden="true">＋</span>
+      </button>
     </article>
 
   </div>
@@ -592,6 +567,95 @@
 </section>
 
 </main>
+
+<!-- Diálogos de Información útil -->
+<dialog class="info-dialog" id="dialog-llegar" aria-labelledby="dialog-llegar-title">
+  <div class="info-dialog-panel">
+    <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
+    <p class="info-dialog-eyebrow">El lugar</p>
+    <h2 id="dialog-llegar-title">Cómo llegar</h2>
+    <div class="info-dialog-content arrival-content">
+      <div class="arrival-place">
+        <span class="info-dialog-label">Celebración</span>
+        <h3>Finca Prados Moros</h3>
+        <p>Ctra. M-600, km 0,2<br>28440 Guadarrama, Madrid, España</p>
+        <a class="dialog-button" href="https://www.google.com/maps/search/?api=1&amp;query=Finca%20Prados%20Moros%20Guadarrama" target="_blank" rel="noopener noreferrer">Abrir en Google Maps <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="arrival-detail">
+        <span class="info-dialog-label">Indicaciones de llegada</span>
+        <p>Añadiremos aquí las indicaciones detalladas cuando estén confirmadas.</p>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="info-dialog" id="dialog-dormir" aria-labelledby="dialog-dormir-title">
+  <div class="info-dialog-panel">
+    <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
+    <p class="info-dialog-eyebrow">La estancia</p>
+    <h2 id="dialog-dormir-title">Dónde dormir</h2>
+    <div class="info-dialog-content lodging-content">
+      <p class="dialog-lead">Hoteles y alojamientos cercanos.</p>
+      <div class="lodging-placeholder"><span class="info-dialog-label">Alojamientos</span><p>La información de alojamientos se añadirá aquí cuando esté confirmada.</p></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="info-dialog" id="dialog-dress-code" aria-labelledby="dialog-dress-code-title">
+  <div class="info-dialog-panel dress-panel">
+    <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
+    <p class="info-dialog-eyebrow">Una nota de estilo</p>
+    <h2 id="dialog-dress-code-title">Dress code</h2>
+    <div class="info-dialog-content dress-content">
+      <span class="dress-flower" aria-hidden="true">❧</span>
+      <p class="dress-quote">Elegante, cómodo y acorde al entorno.</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="info-dialog" id="dialog-vuelta" aria-labelledby="dialog-vuelta-title">
+  <div class="info-dialog-panel">
+    <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
+    <p class="info-dialog-eyebrow">El regreso</p>
+    <h2 id="dialog-vuelta-title">Después de la fiesta</h2>
+    <div class="info-dialog-content return-content">
+      <p class="dialog-lead">Transporte y opciones para volver.</p>
+      <div class="return-placeholder"><span class="info-dialog-label">Vuelta</span><p>Aquí encontrarás las opciones de transporte de vuelta cuando estén confirmadas.</p></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="info-dialog" id="dialog-regalos" aria-labelledby="dialog-regalos-title">
+  <div class="info-dialog-panel gift-panel">
+    <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
+    <p class="info-dialog-eyebrow">Con cariño</p>
+    <h2 id="dialog-regalos-title">Regalos</h2>
+    <div class="info-dialog-content gift-content">
+      <span class="gift-ornament" aria-hidden="true">♡</span>
+      <p class="gift-message">Si quieres darnos un detalle, aquí te contaremos cómo.</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="info-dialog calendar-dialog" id="dialog-calendario" aria-labelledby="dialog-calendario-title">
+  <div class="info-dialog-panel calendar-dialog-panel">
+    <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
+    <p class="info-dialog-eyebrow">27 · 08 · 27</p>
+    <h2 id="dialog-calendario-title">Añadir a mi calendario</h2>
+    <div class="info-dialog-content calendar-dialog-content">
+      <p class="dialog-lead">Guarda la fecha de nuestra boda en tu calendario.</p>
+      <div class="calendar-event-details">
+        <span>Viernes, 27 de agosto de 2027</span>
+        <span>18:30 — sábado 28 · 04:00</span>
+        <span>Finca Prados Moros · Guadarrama</span>
+      </div>
+      <div class="calendar-actions">
+        <a class="dialog-button" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Boda+de+Carmen+y+Nico&amp;dates=20270827T183000%2F20270828T040000&amp;ctz=Europe%2FMadrid&amp;location=Finca+Prados+Moros%2C+Ctra.+M-600%2C+km+0%2C2%2C+28440+Guadarrama%2C+Madrid%2C+Espa%C3%B1a&amp;details=%C2%A1Nos+casamos%21+Guarda+la+fecha+y+acomp%C3%A1%C3%B1anos+a+celebrar+nuestro+d%C3%ADa.+Consulta+la+web+de+nuestra+boda+para+ver+los+detalles+y+la+informaci%C3%B3n+pr%C3%A1ctica" target="_blank" rel="noopener noreferrer">Añadir a Google Calendar <span aria-hidden="true">↗</span></a>
+        <a class="dialog-button dialog-button-outline" href="boda-carmen-y-nico.ics" download="boda-carmen-y-nico.ics">Descargar archivo de calendario (.ics) <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 
 <script>
@@ -702,6 +766,88 @@ document.addEventListener("keydown", event => {
   menu.classList.remove("is-open");
   menuTrigger.setAttribute("aria-expanded", "false");
   menuTrigger.focus();
+});
+
+
+/* =====================================================
+   DIÁLOGOS DE INFORMACIÓN ÚTIL
+===================================================== */
+
+const infoDialogTriggers = document.querySelectorAll("[data-info-dialog]");
+let activeInfoDialog = null;
+let infoDialogOpener = null;
+let lockedPageScrollY = 0;
+let savedBodyPositionStyles = null;
+
+function bloquearScrollDeFondo() {
+  lockedPageScrollY = window.scrollY;
+  savedBodyPositionStyles = {
+    position: document.body.style.position,
+    top: document.body.style.top,
+    width: document.body.style.width,
+    overflow: document.body.style.overflow
+  };
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${lockedPageScrollY}px`;
+  document.body.style.width = "100%";
+  document.body.style.overflow = "hidden";
+}
+
+function restaurarScrollDeFondo() {
+  if (!savedBodyPositionStyles) return;
+  Object.assign(document.body.style, savedBodyPositionStyles);
+  savedBodyPositionStyles = null;
+  const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+  document.documentElement.style.scrollBehavior = "auto";
+  window.scrollTo(0, lockedPageScrollY);
+  document.documentElement.style.scrollBehavior = previousScrollBehavior;
+}
+
+function cerrarInfoDialog(dialog) {
+  if (!dialog.open || dialog.dataset.closing === "true") return;
+  dialog.dataset.closing = "true";
+  dialog.classList.remove("is-visible");
+  window.setTimeout(() => {
+    if (dialog.open) dialog.close();
+  }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180);
+}
+
+infoDialogTriggers.forEach(trigger => {
+  const dialog = document.getElementById(trigger.dataset.infoDialog);
+  if (!dialog) return;
+
+  const closeButton = dialog.querySelector(".info-dialog-close");
+
+  trigger.addEventListener("click", () => {
+    if (activeInfoDialog) return;
+    infoDialogOpener = trigger;
+    activeInfoDialog = dialog;
+    bloquearScrollDeFondo();
+    dialog.dataset.closing = "false";
+    dialog.showModal();
+    closeButton.focus({ preventScroll: true });
+    window.requestAnimationFrame(() => dialog.classList.add("is-visible"));
+  });
+
+  closeButton.addEventListener("click", () => cerrarInfoDialog(dialog));
+
+  dialog.addEventListener("click", event => {
+    if (event.target === dialog) cerrarInfoDialog(dialog);
+  });
+
+  dialog.addEventListener("cancel", event => {
+    event.preventDefault();
+    cerrarInfoDialog(dialog);
+  });
+
+  dialog.addEventListener("close", () => {
+    dialog.classList.remove("is-visible");
+    delete dialog.dataset.closing;
+    activeInfoDialog = null;
+    restaurarScrollDeFondo();
+    if (infoDialogOpener?.isConnected) infoDialogOpener.focus({ preventScroll: true });
+    infoDialogOpener = null;
+  });
 });
 
 

@@ -721,12 +721,14 @@ form,
   width: fit-content;
   max-width: 100%;
   margin-right: auto;
+  margin-bottom: .2rem;
   margin-left: auto;
 }
 
 .rsvp-search-group #rsvp-search {
   width: 100%;
   max-width: none;
+  margin: .4rem auto .5rem;
 }
 
 .rsvp-search-group #rsvp-search > label {
@@ -822,10 +824,18 @@ fieldset label {
 
 .guest-results {
   display: grid;
+  justify-items: start;
 
   gap: .5rem;
 
   margin-top: .8rem;
+}
+
+#guest-results .guest-option {
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 999px;
+  overflow-wrap: anywhere;
 }
 
 .guest-option {
@@ -848,11 +858,21 @@ fieldset label {
 
 #group-rsvp-container {
   max-width: 620px;
-  margin: 2rem auto;
+  margin: .5rem auto 2rem;
+}
+
+#rsvp-search-message {
+  min-height: 0;
+  margin: 0;
+}
+
+#group-rsvp-container > .rsvp-status {
+  margin: 0 0 .75rem;
 }
 
 .guest-rsvp-card {
   border: 1px solid rgba(89, 104, 70, .35);
+  border-radius: 12px;
   background: rgba(250, 235, 210, .28);
   padding: 1.25rem;
 }
@@ -873,6 +893,7 @@ fieldset label {
 
 .saved-response-actions .guest-option {
   width: auto;
+  border-radius: 8px;
 }
 
 .guest-rsvp-editor[hidden] {

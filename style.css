@@ -888,7 +888,7 @@ fieldset label {
 .saved-response-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: .3rem .6rem;
+  gap: .15rem .6rem;
 }
 
 .saved-response-actions .guest-option {

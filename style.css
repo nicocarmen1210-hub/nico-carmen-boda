@@ -871,14 +871,14 @@ fieldset label {
 }
 
 .guest-rsvp-card {
-  border: 1px solid rgba(89, 104, 70, .35);
+  border: 1px solid rgba(89, 104, 70, .24);
   border-radius: 12px;
   background: rgba(250, 235, 210, .28);
-  padding: 1.25rem;
+  padding: 1.25rem 1.25rem .8rem;
 }
 
 .saved-response-prompt {
-  margin: .75rem 0 1rem;
+  margin: .75rem 0 .5rem;
 }
 
 .saved-response-prompt p {
@@ -888,12 +888,44 @@ fieldset label {
 .saved-response-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: .6rem;
+  gap: .3rem .6rem;
 }
 
 .saved-response-actions .guest-option {
+  position: relative;
   width: auto;
-  border-radius: 8px;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 94%, var(--dark));
+  color: var(--green);
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.saved-response-actions .guest-option::before,
+.guest-rsvp-editor > .button::before {
+  position: absolute;
+  inset: .35rem;
+  border: 1px solid rgba(89, 104, 70, .2);
+  border-radius: 999px;
+  content: "";
+  pointer-events: none;
+}
+
+.guest-rsvp-editor > .button {
+  position: relative;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 94%, var(--dark));
+  color: var(--green);
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.saved-response-actions .guest-option:hover,
+.saved-response-actions .guest-option:active,
+.guest-rsvp-editor > .button:hover,
+.guest-rsvp-editor > .button:active {
+  background: color-mix(in srgb, var(--paper) 90%, var(--dark));
+  color: var(--green);
 }
 
 .guest-rsvp-editor[hidden] {
@@ -902,6 +934,11 @@ fieldset label {
 
 .guest-rsvp-card h3 {
   margin-top: 0;
+}
+
+.guest-rsvp-card > .rsvp-status {
+  min-height: 0;
+  margin: 0;
 }
 
 .guest-rsvp-card button:disabled {

@@ -336,7 +336,8 @@
   </h2>
 
   <p class="place">
-    Guadarrama
+    Carretera M-600, km 0,2<br>
+    28440 Guadarrama, Madrid, España
   </p>
 
   <p class="intro">
@@ -355,7 +356,7 @@
   </div>
 
   <a
-    class="button"
+    class="button place-directions"
     href="https://www.google.com/maps/search/?api=1&query=Finca%20Prados%20Moros%20Guadarrama"
     target="_blank"
     rel="noopener">
@@ -433,24 +434,27 @@
     Confirmar asistencia
   </p>
 
-  <h2>
-    ¿Nos acompañas?
-  </h2>
+  <div class="rsvp-search-group">
+    <h2>
+      ¿Nos acompañas?
+    </h2>
 
+    <div id="rsvp-search">
 
-  <div id="rsvp-search">
+      <label for="guest-search">
+        Busca tu nombre
+      </label>
 
-    <label for="guest-search">
-      Busca tu nombre
-    </label>
+      <div class="guest-search-field">
+        <input
+          id="guest-search"
+          type="text"
+          autocomplete="name"
+          placeholder="Nombre y apellido">
+      </div>
 
-    <input
-      id="guest-search"
-      type="text"
-      autocomplete="name"
-      placeholder="Nombre y apellido">
-
-    <div id="guest-results" class="guest-results" aria-live="polite"></div>
+      <div id="guest-results" class="guest-results" aria-live="polite"></div>
+    </div>
   </div>
 
   <p id="rsvp-search-message" class="rsvp-status" role="status" aria-live="polite"></p>
@@ -545,17 +549,21 @@
 
 <section id="cierre" class="closing">
 
-  <h2>
-    Carmen &amp; Nico
-  </h2>
+  <div class="wedding-countdown" data-countdown aria-labelledby="countdown-heading">
+    <p class="countdown-intro" id="countdown-heading">Cada vez queda menos…</p>
+    <div class="countdown-values" role="timer" aria-label="Cuenta atrás para la boda" aria-live="off">
+      <div class="countdown-unit"><span class="countdown-number" data-countdown-days>—</span><span class="countdown-label">DÍAS</span></div>
+      <div class="countdown-unit"><span class="countdown-number" data-countdown-hours>—</span><span class="countdown-label">HORAS</span></div>
+      <div class="countdown-unit"><span class="countdown-number" data-countdown-minutes>—</span><span class="countdown-label">MINUTOS</span></div>
+      <div class="countdown-unit"><span class="countdown-number" data-countdown-seconds>—</span><span class="countdown-label">SEGUNDOS</span></div>
+    </div>
+    <p class="countdown-today" data-countdown-today role="status" aria-live="polite" hidden>¡Hoy es el gran día!</p>
+  </div>
 
-  <p>
-    27 · 08 · 27
-  </p>
-
-  <p>
-    Nos vemos en Prados Moros.
-  </p>
+  <div class="closing-signoff">
+    <p class="closing-date">27 · 08 · 2027</p>
+    <h2 class="closing-couple">Carmen &amp; Nico</h2>
+  </div>
 
   <a class="back-to-top" href="#inicio">
     <svg aria-hidden="true" viewBox="0 0 40 52">
@@ -572,7 +580,6 @@
 <dialog class="info-dialog" id="dialog-llegar" aria-labelledby="dialog-llegar-title">
   <div class="info-dialog-panel">
     <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
-    <p class="info-dialog-eyebrow">El lugar</p>
     <h2 id="dialog-llegar-title">Cómo llegar</h2>
     <div class="info-dialog-content transport-content">
       <p class="transport-intro">La celebración tendrá lugar en <strong>Finca Prados Moros, Guadarrama</strong>.</p>
@@ -619,7 +626,6 @@
 <dialog class="info-dialog" id="dialog-dormir" aria-labelledby="dialog-dormir-title">
   <div class="info-dialog-panel">
     <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
-    <p class="info-dialog-eyebrow">La estancia</p>
     <h2 id="dialog-dormir-title">Dónde dormir</h2>
     <div class="info-dialog-content lodging-content">
       <p class="lodging-message">Si preferís quedaros a dormir cerca de la finca, os recomendamos organizar el alojamiento con antelación para disfrutar de la celebración sin preocuparos por la vuelta. Tened en cuenta la ubicación de la finca y planificad el transporte hasta vuestro alojamiento.</p>
@@ -630,8 +636,6 @@
 <dialog class="info-dialog" id="dialog-dress-code" aria-labelledby="dialog-dress-code-title">
   <div class="info-dialog-panel dress-panel">
     <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
-    <span class="dress-ornament" aria-hidden="true">❧</span>
-    <p class="info-dialog-eyebrow">NUESTRA BODA · 27.08.2027</p>
     <h2 id="dialog-dress-code-title">Dress code</h2>
     <div class="info-dialog-content dress-content">
       <section class="dress-category" aria-labelledby="dress-ellas">
@@ -655,11 +659,8 @@
 <dialog class="info-dialog" id="dialog-vuelta" aria-labelledby="dialog-vuelta-title">
   <div class="info-dialog-panel">
     <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
-    <p class="info-dialog-eyebrow">El regreso</p>
     <h2 id="dialog-vuelta-title">Después de la fiesta</h2>
     <div class="info-dialog-content transport-content">
-      <p class="transport-intro">¡Queremos que disfrutéis hasta el último baile!</p>
-
       <section class="transport-block">
         <h3 class="transport-heading">
           <svg class="transport-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -684,6 +685,7 @@
         </h3>
         <ul class="transport-list">
           <li>Podéis volver en <strong>coche, taxi, Uber u otro servicio VTC</strong> desde la finca.</li>
+          <li><strong>Recordad que no se puede dejar el coche después de la fiesta en la finca.</strong></li>
         </ul>
       </section>
 
@@ -695,7 +697,6 @@
 <dialog class="info-dialog" id="dialog-regalos" aria-labelledby="dialog-regalos-title">
   <div class="info-dialog-panel gift-panel">
     <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
-    <p class="info-dialog-eyebrow">Con cariño</p>
     <h2 id="dialog-regalos-title">Regalos</h2>
     <div class="info-dialog-content gift-content">
       <span class="gift-ornament" aria-hidden="true">♡</span>
@@ -707,17 +708,16 @@
 <dialog class="info-dialog calendar-dialog" id="dialog-calendario" aria-labelledby="dialog-calendario-title">
   <div class="info-dialog-panel calendar-dialog-panel">
     <button class="info-dialog-close" type="button" aria-label="Cerrar ventana">×</button>
-    <p class="info-dialog-eyebrow">27 · 08 · 27</p>
     <h2 id="dialog-calendario-title">Añadir a mi calendario</h2>
     <div class="info-dialog-content calendar-dialog-content">
       <p class="dialog-lead">Guarda la fecha de nuestra boda en tu calendario.</p>
       <div class="calendar-event-details">
         <span>Viernes, 27 de agosto de 2027</span>
-        <span>18:30 — sábado 28 · 04:00</span>
+        <span>18:30 — sábado 28 · 05:00</span>
         <span>Finca Prados Moros · Guadarrama</span>
       </div>
       <div class="calendar-actions">
-        <a class="dialog-button" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Boda+de+Carmen+y+Nico&amp;dates=20270827T183000%2F20270828T040000&amp;ctz=Europe%2FMadrid&amp;location=Finca+Prados+Moros%2C+Ctra.+M-600%2C+km+0%2C2%2C+28440+Guadarrama%2C+Madrid%2C+Espa%C3%B1a&amp;details=%C2%A1Nos+casamos%21+Guarda+la+fecha+y+acomp%C3%A1%C3%B1anos+a+celebrar+nuestro+d%C3%ADa.+Consulta+la+web+de+nuestra+boda+para+ver+los+detalles+y+la+informaci%C3%B3n+pr%C3%A1ctica" target="_blank" rel="noopener noreferrer">Añadir a Google Calendar <span aria-hidden="true">↗</span></a>
+        <a class="dialog-button" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Boda+de+Carmen+y+Nico&amp;dates=20270827T183000%2F20270828T050000&amp;ctz=Europe%2FMadrid&amp;location=Finca+Prados+Moros%2C+Ctra.+M-600%2C+km+0%2C2%2C+28440+Guadarrama%2C+Madrid%2C+Espa%C3%B1a&amp;details=%C2%A1Nos+casamos%21+Guarda+la+fecha+y+acomp%C3%A1%C3%B1anos+a+celebrar+nuestro+d%C3%ADa.+Consulta+la+web+de+nuestra+boda+para+ver+los+detalles+y+la+informaci%C3%B3n+pr%C3%A1ctica" target="_blank" rel="noopener noreferrer">Añadir a Google Calendar <span aria-hidden="true">↗</span></a>
         <a class="dialog-button dialog-button-outline" href="boda-carmen-y-nico.ics" download="boda-carmen-y-nico.ics">Descargar archivo de calendario (.ics) <span aria-hidden="true">↓</span></a>
       </div>
     </div>
@@ -750,6 +750,7 @@ function prepararReveladoAlDesplazarse() {
   const revealTargets = document.querySelectorAll([
     ".section > .eyebrow",
     ".section > h2",
+    ".section > .rsvp-search-group > h2",
     ".section > .intro",
     ".section > .place",
     ".section > .historia-carousel",
@@ -795,6 +796,70 @@ function prepararReveladoAlDesplazarse() {
 }
 
 const scrollRevealObserver = prepararReveladoAlDesplazarse();
+
+function iniciarCuentaAtras() {
+  const countdown = document.querySelector("[data-countdown]");
+  if (!countdown) return;
+
+  // Convierte la hora local de Madrid a un instante UTC usando las reglas IANA del navegador.
+  const targetParts = { year: 2027, month: 8, day: 27, hour: 18, minute: 30, second: 0 };
+  const madridClock = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Madrid",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
+    hourCycle: "h23"
+  });
+  const targetAsUtc = Date.UTC(
+    targetParts.year, targetParts.month - 1, targetParts.day,
+    targetParts.hour, targetParts.minute, targetParts.second
+  );
+  let targetInstant = targetAsUtc;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const localParts = Object.fromEntries(
+      madridClock.formatToParts(new Date(targetInstant))
+        .filter(part => part.type !== "literal")
+        .map(part => [part.type, Number(part.value)])
+    );
+    const displayedAsUtc = Date.UTC(
+      localParts.year, localParts.month - 1, localParts.day,
+      localParts.hour, localParts.minute, localParts.second
+    );
+    const correction = targetAsUtc - displayedAsUtc;
+    targetInstant += correction;
+    if (correction === 0) break;
+  }
+
+  const values = {
+    days: countdown.querySelector("[data-countdown-days]"),
+    hours: countdown.querySelector("[data-countdown-hours]"),
+    minutes: countdown.querySelector("[data-countdown-minutes]"),
+    seconds: countdown.querySelector("[data-countdown-seconds]")
+  };
+  const valuePanel = countdown.querySelector(".countdown-values");
+  const todayMessage = countdown.querySelector("[data-countdown-today]");
+  let timerId;
+
+  function update() {
+    const remaining = targetInstant - Date.now();
+    if (remaining <= 0) {
+      window.clearInterval(timerId);
+      valuePanel.hidden = true;
+      todayMessage.hidden = false;
+      return;
+    }
+
+    const totalSeconds = Math.floor(remaining / 1000);
+    values.days.textContent = String(Math.floor(totalSeconds / 86400));
+    values.hours.textContent = String(Math.floor((totalSeconds % 86400) / 3600)).padStart(2, "0");
+    values.minutes.textContent = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+    values.seconds.textContent = String(totalSeconds % 60).padStart(2, "0");
+  }
+
+  update();
+  if (!valuePanel.hidden) timerId = window.setInterval(update, 1000);
+}
+
+iniciarCuentaAtras();
 
 
 /* =====================================================

@@ -227,8 +227,8 @@ h3 {
   gap: .45rem;
   margin-top: 2rem;
   color: var(--dark);
-  font-family: "Bocklin", Georgia, serif;
-  font-size: 1.2rem;
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: .9rem;
   text-decoration: none;
   transition: color .2s ease;
 }
@@ -608,6 +608,26 @@ textarea:focus-visible {
   cursor: pointer;
 }
 
+.place-directions {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 94%, var(--dark));
+  color: var(--green);
+}
+
+.place-directions::before {
+  position: absolute;
+  inset: .35rem;
+  border: 1px solid rgba(89, 104, 70, .2);
+  border-radius: 999px;
+  content: "";
+  pointer-events: none;
+}
+
 
 /* =====================================================
    TIMELINE
@@ -688,6 +708,56 @@ form,
   margin: 2rem auto;
 
   text-align: left;
+}
+
+.rsvp-search-group {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.rsvp-search-group > h2 {
+  width: fit-content;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.rsvp-search-group #rsvp-search {
+  width: 100%;
+  max-width: none;
+}
+
+.rsvp-search-group #rsvp-search > label {
+  text-align: center;
+}
+
+.guest-search-field {
+  position: relative;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 94%, var(--dark));
+}
+
+.guest-search-field::before {
+  position: absolute;
+  inset: .35rem;
+  border: 1px solid rgba(89, 104, 70, .2);
+  border-radius: 999px;
+  content: "";
+  pointer-events: none;
+}
+
+#guest-search {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--green);
+}
+
+#guest-search::placeholder {
+  color: var(--green);
+  opacity: .82;
 }
 
 label,
@@ -891,7 +961,104 @@ fieldset label {
 }
 
 .closing > .back-to-top {
+  margin-top: 1rem;
+}
+
+.closing-signoff {
   margin-top: auto;
+}
+
+.wedding-countdown {
+  position: relative;
+  width: min(100%, 620px);
+  margin: clamp(1rem, 4vh, 2rem) auto clamp(1.25rem, 4vh, 2rem);
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--paper) 94%, var(--dark));
+}
+
+.wedding-countdown::before {
+  position: absolute;
+  inset: .45rem;
+  border: 1px solid rgba(89, 104, 70, .2);
+  border-radius: 8px;
+  content: "";
+  pointer-events: none;
+}
+
+.countdown-intro {
+  margin: 0 0 1.5rem;
+  color: var(--dark);
+  font-size: clamp(.88rem, 2vw, 1rem);
+  font-style: italic;
+}
+
+.countdown-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(.35rem, 2vw, 1.25rem);
+}
+
+.countdown-unit {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+}
+
+.countdown-number {
+  color: var(--green);
+  font-family: "Bocklin", Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.countdown-label {
+  color: var(--dark);
+  font-size: clamp(.55rem, 1.5vw, .68rem);
+  letter-spacing: .12em;
+}
+
+.countdown-today {
+  margin: 0;
+  color: var(--green);
+  font-family: "Bocklin", Georgia, serif;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.countdown-values[hidden],
+.countdown-today[hidden] {
+  display: none;
+}
+
+.closing-couple {
+  margin: .6rem 0 .3rem;
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+}
+
+.closing-date {
+  margin: 0 0 1rem;
+  letter-spacing: .12em;
+  font-size: .9rem;
+}
+
+@media (max-width: 380px) {
+  .countdown-values {
+    gap: .2rem;
+  }
+
+  .countdown-number {
+    font-size: clamp(1.75rem, 8vw, 2.2rem);
+  }
+
+  .countdown-label {
+    font-size: .58rem;
+    letter-spacing: .03em;
+  }
 }
 
 
@@ -1745,16 +1912,6 @@ fieldset label {
   background: rgba(234, 211, 182, .12);
 }
 
-.info-dialog-eyebrow {
-  flex: 0 0 auto;
-  margin: .1rem 2.5rem .45rem;
-  color: rgba(234, 211, 182, .76);
-  font-size: .63rem;
-  letter-spacing: .2em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
 .info-dialog-panel > h2 {
   flex: 0 0 auto;
   margin: 0 2rem .65rem;
@@ -1800,14 +1957,16 @@ fieldset label {
 }
 
 .dialog-button {
+  position: relative;
   display: inline-flex;
   min-height: 44px;
   align-items: center;
   justify-content: center;
   gap: .55rem;
   padding: .65rem .9rem;
-  border: 1px solid var(--paper);
-  background: var(--paper);
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 94%, var(--dark));
   color: var(--green);
   font-size: .76rem;
   line-height: 1.35;
@@ -1816,9 +1975,18 @@ fieldset label {
   transition: color .2s ease, background-color .2s ease;
 }
 
+.dialog-button::before {
+  position: absolute;
+  inset: .35rem;
+  border: 1px solid rgba(89, 104, 70, .2);
+  border-radius: 999px;
+  content: "";
+  pointer-events: none;
+}
+
 .dialog-button:hover {
-  background: transparent;
-  color: var(--paper);
+  background: color-mix(in srgb, var(--paper) 90%, var(--dark));
+  color: var(--green);
 }
 
 .transport-content {
@@ -1845,7 +2013,7 @@ fieldset label {
 .lodging-message {
   max-width: 440px;
   margin: auto !important;
-  font-size: .86rem;
+  font-size: .9rem;
   line-height: 1.8;
   text-align: center;
 }
@@ -1854,9 +2022,17 @@ fieldset label {
 .transport-outro {
   margin: 0 !important;
   color: var(--paper);
-  font-size: .86rem;
   line-height: 1.6;
   text-align: center;
+}
+
+.transport-intro {
+  font-size: .9rem;
+}
+
+.transport-outro {
+  font-size: .78rem;
+  font-style: italic;
 }
 
 .transport-block {
@@ -1945,27 +2121,10 @@ fieldset label {
   max-width: 360px;
   margin: .7rem auto !important;
   color: var(--paper);
-  font-family: "Bocklin", Georgia, serif;
-  font-size: clamp(1.6rem, 5vw, 2.25rem);
-  line-height: 1.2;
+  font-family: "Libre Baskerville", serif;
+  font-size: .9rem;
+  line-height: 1.8;
   text-align: center;
-}
-
-.gift-message {
-  font-size: clamp(1.35rem, 4vw, 1.8rem);
-}
-
-.dress-ornament {
-  flex: 0 0 auto;
-  margin: -.35rem auto .1rem;
-  color: rgba(234, 211, 182, .8);
-  font-family: "Bocklin", Georgia, serif;
-  font-size: 1.75rem;
-  line-height: 1;
-}
-
-.dress-panel > .info-dialog-eyebrow {
-  margin-bottom: .2rem;
 }
 
 .dress-panel > h2 {
@@ -2042,13 +2201,7 @@ fieldset label {
 }
 
 .calendar-actions .dialog-button-outline {
-  border-color: rgba(234, 211, 182, .72);
-  background: transparent;
-  color: var(--paper);
-}
-
-.calendar-actions .dialog-button-outline:hover {
-  background: rgba(234, 211, 182, .1);
+  border-radius: 999px;
 }
 
 @media (max-width: 600px) {
@@ -2098,11 +2251,6 @@ fieldset label {
 
   .dress-panel .info-dialog-content {
     padding-top: .35rem;
-  }
-
-  .dress-ornament {
-    margin-top: -.5rem;
-    font-size: 1.5rem;
   }
 
   .dress-category {

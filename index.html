@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carmen & Nico · 27.08.27</title>
 
-<link rel="stylesheet" href="style.css?v=place-map-ornament-closer-20261023">
+<link rel="stylesheet" href="style.css?v=bidirectional-scroll-reveal-20261023">
 
 
 
@@ -541,15 +541,22 @@
 
 <section id="cierre" class="closing">
 
-  <div class="wedding-countdown" data-countdown aria-labelledby="countdown-heading">
-    <p class="countdown-intro" id="countdown-heading">Cada vez queda menos…</p>
-    <div class="countdown-values" role="timer" aria-label="Cuenta atrás para la boda" aria-live="off">
-      <div class="countdown-unit"><span class="countdown-number" data-countdown-days>—</span><span class="countdown-label">DÍAS</span></div>
-      <div class="countdown-unit"><span class="countdown-number" data-countdown-hours>—</span><span class="countdown-label">HORAS</span></div>
-      <div class="countdown-unit"><span class="countdown-number" data-countdown-minutes>—</span><span class="countdown-label">MINUTOS</span></div>
-      <div class="countdown-unit"><span class="countdown-number" data-countdown-seconds>—</span><span class="countdown-label">SEGUNDOS</span></div>
+  <div class="wedding-countdown" data-countdown>
+    <div class="countdown-ornament-frame countdown-ornament-frame--top" aria-hidden="true">
+      <img class="countdown-ornament" src="images/ornamento2-horizontal.png" alt="">
     </div>
-    <p class="countdown-today" data-countdown-today role="status" aria-live="polite" hidden>¡Hoy es el gran día!</p>
+    <div class="countdown-content">
+      <div class="countdown-values" role="timer" aria-label="Cuenta atrás para la boda" aria-live="off">
+        <div class="countdown-unit"><span class="countdown-number" data-countdown-days>—</span><span class="countdown-label">DÍAS</span></div>
+        <div class="countdown-unit"><span class="countdown-number" data-countdown-hours>—</span><span class="countdown-label">HORAS</span></div>
+        <div class="countdown-unit"><span class="countdown-number" data-countdown-minutes>—</span><span class="countdown-label">MINUTOS</span></div>
+        <div class="countdown-unit"><span class="countdown-number" data-countdown-seconds>—</span><span class="countdown-label">SEGUNDOS</span></div>
+      </div>
+      <p class="countdown-today" data-countdown-today role="status" aria-live="polite" hidden>¡Hoy es el gran día!</p>
+    </div>
+    <div class="countdown-ornament-frame countdown-ornament-frame--bottom" aria-hidden="true">
+      <img class="countdown-ornament" src="images/ornamento2-horizontal.png" alt="">
+    </div>
   </div>
 
   <div class="closing-signoff">
@@ -740,31 +747,24 @@ function prepararReveladoAlDesplazarse() {
   }
 
   const revealTargets = document.querySelectorAll([
-    ".section > .eyebrow",
-    ".section > h2",
-    ".section > .rsvp-search-group > h2",
-    ".section > .intro",
-    ".section > .place",
-    ".section > .historia-carousel",
-    ".section > .historia-dots",
-    ".section > .place-map",
-    ".section > .button",
-    ".section > .timeline",
+    ".hero > .hero-title-layout",
+    ".hero > .venue",
+    ".hero > .eyebrow",
+    ".hero > .scroll-cue",
+    ".section > *:not(.info-list)",
     ".section > .info-list > article",
-    ".closing > h2",
-    ".closing > p",
+    ".closing > .wedding-countdown",
+    ".closing > .closing-signoff",
     ".closing > .back-to-top"
   ].join(", "));
 
-  const observer = new IntersectionObserver((entries, activeObserver) => {
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("is-revealed");
-      activeObserver.unobserve(entry.target);
+      entry.target.classList.toggle("is-revealed", entry.isIntersecting);
     });
   }, {
-    rootMargin: "0px 0px -8% 0px",
-    threshold: 0.12
+    rootMargin: "-5% 0px -5% 0px",
+    threshold: 0.06
   });
 
   const delaysBySection = new Map();
@@ -776,18 +776,22 @@ function prepararReveladoAlDesplazarse() {
       "--reveal-delay",
       `${Math.min(delayIndex, 4) * 70}ms`
     );
+    target.classList.add("reveal-pending");
+    target.addEventListener("focusin", () => {
+      target.classList.add("is-revealed");
+    });
+
     const bounds = target.getBoundingClientRect();
     if (bounds.bottom > 0 && bounds.top < window.innerHeight) {
       target.classList.add("is-revealed");
     }
-    target.classList.add("reveal-pending");
     observer.observe(target);
   });
 
   return observer;
 }
 
-const scrollRevealObserver = prepararReveladoAlDesplazarse();
+let scrollRevealObserver = prepararReveladoAlDesplazarse();
 
 function iniciarCuentaAtras() {
   const countdown = document.querySelector("[data-countdown]");
@@ -1253,6 +1257,7 @@ reducedMotionPreference.addEventListener?.("change", event => {
         .forEach(target => target.classList.add("is-revealed"));
     }
   } else {
+    scrollRevealObserver = prepararReveladoAlDesplazarse();
     iniciarHistoriaAutoPlay();
   }
 });

@@ -628,6 +628,27 @@ textarea:focus-visible {
   pointer-events: none;
 }
 
+.place-ornament {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.place-ornament--mirrored {
+  transform: scaleY(-1);
+  margin: 0 auto;
+}
+
+.place-ornament--mirrored + .place-map {
+  margin: .25rem auto;
+}
+
+.place-map + .place-ornament {
+  margin-top: 0;
+}
+
 
 /* =====================================================
    TIMELINE

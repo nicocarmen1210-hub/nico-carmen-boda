@@ -631,7 +631,7 @@ textarea:focus-visible {
 .place-ornament {
   display: block;
   width: 100%;
-  max-width: 480px;
+  max-width: 560px;
   height: auto;
   margin: 0 auto;
 }
@@ -639,14 +639,15 @@ textarea:focus-visible {
 .place-ornament--mirrored {
   transform: scaleY(-1);
   margin: 0 auto;
+  margin-bottom: clamp(-2.5rem, -6vw, -1rem);
 }
 
 .place-ornament--mirrored + .place-map {
-  margin: .25rem auto;
+  margin-top: .0625rem;
 }
 
 .place-map + .place-ornament {
-  margin-top: 0;
+  margin-top: clamp(-2.5rem, -6vw, -1rem);
 }
 
 
@@ -721,10 +722,25 @@ textarea:focus-visible {
   font-size: 1rem;
 }
 
+/* Ajustes de ritmo vertical para la sección «El día». */
+#dia > h2 {
+  margin-bottom: .15rem;
+}
+
+#dia > .timeline {
+  margin-bottom: .25rem;
+}
+
+#dia > .section-scroll-cue {
+  margin: .15rem auto 0;
+  padding-top: 0;
+}
+
 .place-map {
   width: min(80%, 480px);
   aspect-ratio: 16 / 9;
   margin: 2rem auto;
+  margin-bottom: .5rem;
   overflow: hidden;
   border: 1px solid rgba(89, 104, 70, .3);
   box-shadow: 0 8px 22px rgba(40, 55, 40, .13);
@@ -742,13 +758,10 @@ textarea:focus-visible {
     font-size: clamp(2.2rem, 4vw, 3.5rem);
   }
 
-  #lugar .place-ornament {
-    width: min(100%, 24vh);
-  }
-
   #lugar .place-map {
     width: min(80%, 30vh);
-    margin: .5rem auto;
+    margin: .125rem auto;
+    margin-bottom: .125rem;
   }
 }
 

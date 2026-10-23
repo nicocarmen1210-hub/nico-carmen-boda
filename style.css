@@ -635,7 +635,8 @@ textarea:focus-visible {
 
 .timeline {
   --timeline-image-width: clamp(170px, 24vw, 220px);
-  --timeline-event-overlap: clamp(16px, 5vw, 52px);
+  --timeline-event-overlap: clamp(24px, 6vw, 68px);
+  --timeline-shift: clamp(-24px, -2vw, -10px);
 
   display: grid;
   grid-template-columns: var(--timeline-image-width) 215px;
@@ -647,6 +648,7 @@ textarea:focus-visible {
   margin: 0 auto 3rem;
   text-align: left;
   position: relative;
+  left: var(--timeline-shift);
 }
 
 .timeline-botanical {
@@ -693,9 +695,9 @@ textarea:focus-visible {
 }
 
 .timeline-event span {
-  font-family: "Bocklin", Georgia, serif;
+  font-family: inherit;
   color: var(--dark);
-  font-size: clamp(.86rem, 1.4vw, 1rem);
+  font-size: 1rem;
 }
 
 .place-map {
@@ -1255,7 +1257,8 @@ fieldset label {
 
   .timeline {
     --timeline-image-width: clamp(125px, 38vw, 150px);
-    --timeline-event-overlap: clamp(14px, 6vw, 28px);
+    --timeline-event-overlap: clamp(20px, 8vw, 34px);
+    --timeline-shift: clamp(-14px, -3vw, -6px);
     grid-template-columns: var(--timeline-image-width) minmax(0, 1fr);
     width: min(100%, 480px);
     gap: .35rem;
@@ -1272,7 +1275,7 @@ fieldset label {
   }
 
   .timeline-event span {
-    font-size: clamp(.76rem, 3.2vw, .9rem);
+    font-size: clamp(.82rem, 3.5vw, .95rem);
     line-height: 1.3;
   }
 

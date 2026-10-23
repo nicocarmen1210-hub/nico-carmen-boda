@@ -634,50 +634,68 @@ textarea:focus-visible {
 ===================================================== */
 
 .timeline {
-  max-width: 540px;
+  --timeline-image-width: clamp(170px, 24vw, 220px);
+  --timeline-event-overlap: clamp(16px, 5vw, 52px);
 
-  margin: 3rem auto;
-
-  border-left: 1px solid var(--green);
-
-  text-align: left;
-}
-
-.timeline div {
   display: grid;
-
-  grid-template-columns: 90px 1fr;
-
-  gap: 1rem;
-
-  padding: 1.2rem 0 1.2rem 1.6rem;
-
+  grid-template-columns: var(--timeline-image-width) 215px;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(.5rem, 2vw, 1.25rem);
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 3rem;
+  text-align: left;
   position: relative;
 }
 
-.timeline div:before {
-  content: "✿";
-
-  position: absolute;
-
-  left: -9px;
-
-  top: 1.2rem;
-
-  background: var(--paper);
-
-  font-size: .9rem;
+.timeline-botanical {
+  display: block;
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  height: auto;
+  align-self: start;
 }
 
-.timeline time {
+.timeline-events {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0 0 0 calc(-1 * var(--timeline-event-overlap));
+  width: calc(100% + var(--timeline-event-overlap));
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-event {
+  position: absolute;
+  top: var(--twig-y);
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: minmax(4.1rem, auto) minmax(0, 1fr);
+  align-items: center;
+  column-gap: .55rem;
+  transform: translateY(-50%);
+  line-height: 1.35;
+}
+
+.timeline-event time {
   font-family:
     "Bocklin",
     Georgia,
     serif;
-
-  font-size: 1.5rem;
-
+  font-size: clamp(1.15rem, 2.3vw, 1.5rem);
   font-weight: normal;
+}
+
+.timeline-event span {
+  font-family: "Bocklin", Georgia, serif;
+  color: var(--dark);
+  font-size: clamp(.86rem, 1.4vw, 1rem);
 }
 
 .place-map {
@@ -1235,8 +1253,27 @@ fieldset label {
   }
 
 
-  .timeline div {
-    grid-template-columns: 75px 1fr;
+  .timeline {
+    --timeline-image-width: clamp(125px, 38vw, 150px);
+    --timeline-event-overlap: clamp(14px, 6vw, 28px);
+    grid-template-columns: var(--timeline-image-width) minmax(0, 1fr);
+    width: min(100%, 480px);
+    gap: .35rem;
+    margin-top: 0;
+  }
+
+  .timeline-event {
+    grid-template-columns: 3.35rem minmax(0, 1fr);
+    column-gap: .35rem;
+  }
+
+  .timeline-event time {
+    font-size: clamp(1rem, 4.3vw, 1.25rem);
+  }
+
+  .timeline-event span {
+    font-size: clamp(.76rem, 3.2vw, .9rem);
+    line-height: 1.3;
   }
 
 

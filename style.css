@@ -634,8 +634,8 @@ textarea:focus-visible {
 ===================================================== */
 
 .timeline {
-  --timeline-image-width: clamp(170px, 24vw, 220px);
-  --timeline-event-overlap: clamp(24px, 6vw, 68px);
+  --timeline-image-width: clamp(210px, 32vw, 310px);
+  --timeline-event-overlap: clamp(66px, calc(6vw + 12px), 92px);
   --timeline-shift: clamp(-24px, -2vw, -10px);
 
   display: grid;
@@ -1256,9 +1256,9 @@ fieldset label {
 
 
   .timeline {
-    --timeline-image-width: clamp(125px, 38vw, 150px);
-    --timeline-event-overlap: clamp(20px, 8vw, 34px);
-    --timeline-shift: clamp(-14px, -3vw, -6px);
+    --timeline-image-width: clamp(220px, 58vw, 270px);
+    --timeline-event-overlap: clamp(82px, calc(12vw + 32px), 110px);
+    --timeline-shift: clamp(-82px, calc(-8vw - 24px), -54px);
     grid-template-columns: var(--timeline-image-width) minmax(0, 1fr);
     width: min(100%, 480px);
     gap: .35rem;

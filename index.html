@@ -1316,6 +1316,9 @@ function jsonpRequest(params) {
       value => value.toString(16)
     ).join("")}`;
     const script = document.createElement("script");
+
+    //Avoid send session cookies to google
+    script.crossOrigin = "anonymous";
     const timeout = window.setTimeout(() => {
       cleanup();
       reject(new Error("El servidor tardó demasiado en responder."));
